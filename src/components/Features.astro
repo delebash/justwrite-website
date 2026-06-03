@@ -1,0 +1,173 @@
+---
+const features = [
+  {
+    label: "01 · Manuscript",
+    title: "A serif page that respects the line.",
+    body: "Chapters, scenes, parts. Drop caps and scene breaks. A continuous-scroll mode that stitches scenes into one long page — so your prose reads the way it will be read.",
+    span: "tall",
+  },
+  {
+    label: "02 · AI Providers",
+    title: "Bring your own model.",
+    body: "Any OpenAI-compatible endpoint — cloud or local. Ollama, LM Studio, llama.cpp, OpenAI proper. Add a provider, pick a model per task. Your keys, your machine.",
+    span: "wide",
+  },
+  {
+    label: "03 · World",
+    title: "Characters, places, things.",
+    body: "Not a database — a notebook. Loose, linked, searchable. Drop a face onto a character; the AI sees it in context.",
+    span: "tall",
+  },
+  {
+    label: "04 · Audiobook",
+    title: "Full .m4b export. With chapters.",
+    body: "Smart-cast voices to characters, render TTS per line, mux to AAC with chapter markers. Hand it to Audible. Or just listen.",
+    span: "wide",
+  },
+  {
+    label: "05 · Manuscript Export",
+    title: "PDF, DOCX, EPUB. Beautifully.",
+    body: "A typeset PDF with a TOC and part covers. A Word doc with a live, auto-refreshing TOC. An EPUB 3 your reader will accept. Cover image included.",
+    span: "tall",
+  },
+  {
+    label: "06 · Sessions",
+    title: "A daily ledger of work.",
+    body: "Word counts logged by day, streaks shown without ceremony. Undo and redo every keystroke if you need to. The analysis is honest.",
+    span: "tall",
+  },
+];
+---
+<section id="features" class="features" data-folio>
+  <div class="container">
+    <header class="features-head">
+      <p class="eyebrow"><span class="roman">II</span><span>The instrument</span></p>
+      <h2 class="section-title">Six rooms, <em>one house.</em></h2>
+      <p class="section-lede">
+        Built for the part of writing that takes years.
+        Each surface is deliberate, but the surfaces are not the point.
+        The book is the point.
+      </p>
+    </header>
+
+    <div class="feature-grid">
+      {features.map((f, i) => (
+        <article class={`feature feature--${f.span}`} style={`--i:${i}`}>
+          <div class="f-label">{f.label}</div>
+          <h3 class="f-title">{f.title}</h3>
+          <p class="f-body">{f.body}</p>
+          <span class="f-corner" aria-hidden="true">¶</span>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .features {
+    background:
+      radial-gradient(700px 500px at 100% 0%, oklch(0.62 0.10 320 / 0.05), transparent 60%);
+  }
+
+  .features-head { max-width: 56rem; margin-bottom: clamp(3rem, 6vw, 5rem); }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.25rem;
+  }
+
+  .feature {
+    position: relative;
+    grid-column: span 6;
+    padding: 2rem 1.75rem 2.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
+  }
+  .feature::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, oklch(0.62 0.10 14 / 0.04), transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .feature:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-color: var(--accent-line); }
+  .feature:hover::before { opacity: 1; }
+
+  @media (min-width: 720px) {
+    .feature--tall { grid-column: span 2; }
+    .feature--wide { grid-column: span 3; }
+    /* Force an asymmetric rhythm: 2-3-1 staggered */
+  }
+  @media (min-width: 1100px) {
+    .feature-grid > :nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .feature-grid > :nth-child(2) { grid-column: span 4; }
+    .feature-grid > :nth-child(3) { grid-column: span 2; }
+    .feature-grid > :nth-child(4) { grid-column: span 2; }
+    .feature-grid > :nth-child(5) { grid-column: span 3; }
+    .feature-grid > :nth-child(6) { grid-column: span 3; }
+  }
+
+  .f-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .f-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 2vw, 1.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 0.9rem;
+    max-width: 22ch;
+  }
+
+  .f-body {
+    font-family: var(--font-ui);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin: 0;
+    max-width: 38ch;
+  }
+
+  .f-corner {
+    position: absolute;
+    top: 1.25rem; right: 1.25rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--subtle);
+    font-size: 18px;
+    opacity: 0.4;
+    transition: opacity 0.3s ease, color 0.3s ease;
+  }
+  .feature:hover .f-corner { opacity: 1; color: var(--accent); }
+
+  /* The tall first card gets a chapter-opener treatment */
+  @media (min-width: 1100px) {
+    .feature-grid > :nth-child(1) {
+      background: linear-gradient(180deg, var(--surface) 0%, var(--paper) 100%);
+      padding: 2.25rem 2rem 2.5rem;
+    }
+    .feature-grid > :nth-child(1) .f-title {
+      font-size: 2rem;
+    }
+    .feature-grid > :nth-child(1) .f-body {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.05rem;
+    }
+  }
+</style>

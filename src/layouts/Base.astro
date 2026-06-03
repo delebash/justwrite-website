@@ -1,0 +1,96 @@
+---
+import "../styles/global.css";
+
+const { title = "JustWrite — A writing instrument for the long form", description = "A desktop writing app for novelists. Manuscript editor, AI providers, audiobook export — built entirely by Claude Code." } = Astro.props;
+---
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,30..100,0..1;1,9..144,300..700,30..100,0..1&family=Spline+Sans:wght@300..700&family=Spline+Sans+Mono:wght@300..600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script is:inline>
+      // Theme persistence — set BEFORE first paint to avoid flash.
+      (function() {
+        try {
+          const saved = localStorage.getItem("jw-theme");
+          if (saved === "light" || saved === "dark") {
+            document.documentElement.setAttribute("data-theme", saved);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Persistent page chrome: brand left, running head center, folio right -->
+    <div class="page-chrome">
+      <a class="brand-lockup" href="#top" aria-label="JustWrite home">
+        <span class="mark">J</span>
+        <span class="name">JustWrite</span>
+      </a>
+
+      <div class="running-head" aria-hidden="true">
+        <span>VOL. I</span>
+        <span class="sep">·</span>
+        <span>A WRITING INSTRUMENT</span>
+        <span class="sep">·</span>
+        <span>FOR THE LONG FORM</span>
+      </div>
+
+      <div class="folio">
+        <span class="num" id="folio-num">i</span>
+        <button class="toggle" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <main id="top">
+      <slot />
+    </main>
+
+    <script is:inline>
+      // Theme toggle
+      const html = document.documentElement;
+      const btn = document.getElementById("theme-toggle");
+      btn?.addEventListener("click", () => {
+        const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        html.setAttribute("data-theme", next);
+        try { localStorage.setItem("jw-theme", next); } catch (e) {}
+      });
+
+      // Folio number cycles through roman numerals as you scroll past sections.
+      // i → ii → iii → iv → v
+      const numerals = ["i", "ii", "iii", "iv", "v"];
+      const sections = Array.from(document.querySelectorAll("section[data-folio]"));
+      const folio = document.getElementById("folio-num");
+      if (folio && sections.length && "IntersectionObserver" in window) {
+        const io = new IntersectionObserver((entries) => {
+          const visible = entries.filter(e => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          if (visible.length) {
+            const idx = sections.indexOf(visible[0].target);
+            if (idx >= 0) folio.textContent = numerals[idx] || numerals[numerals.length - 1];
+          }
+        }, { rootMargin: "-40% 0px -40% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] });
+        sections.forEach(s => io.observe(s));
+      }
+    </script>
+  </body>
+</html>

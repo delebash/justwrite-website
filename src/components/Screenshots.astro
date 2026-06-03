@@ -1,0 +1,187 @@
+---
+// Screenshot gallery — placeholder frames the user will fill in later.
+// Each frame is sized for an aspect ratio commonly captured from the app.
+const shots = [
+  { label: "Home", caption: "The session ledger. A streak, a number, a sentence." , aspect: "16 / 10", tall: true },
+  { label: "Manuscript", caption: "A chapter, in serif, with the world to one side." , aspect: "16 / 11" },
+  { label: "Worldbuilding", caption: "Characters and places. Linked, not catalogued." , aspect: "16 / 10" },
+  { label: "Studio · Script", caption: "Per-line speaker analysis for the audiobook pass.", aspect: "16 / 9" },
+  { label: "Studio · Render", caption: "TTS render queue. One voice per character.", aspect: "16 / 9" },
+  { label: "Settings", caption: "Hue, density, radius, label-case. Tune the room.", aspect: "16 / 11" },
+];
+---
+<section id="sketches" class="screenshots" data-folio>
+  <div class="container">
+    <header class="screenshots-head">
+      <p class="eyebrow"><span class="roman">IV</span><span>Sketches</span></p>
+      <h2 class="section-title">Some <em>rooms</em> of the house.</h2>
+      <p class="section-lede">
+        A few pages from the working draft. Drop your own screenshots into
+        <code>public/screenshots/</code> and the frames will fill themselves in.
+      </p>
+    </header>
+
+    <div class="gallery">
+      {shots.map((s, i) => (
+        <figure class={`shot ${s.tall ? "shot--tall" : ""}`} style={`--i:${i}`}>
+          <div class="shot-frame" style={`aspect-ratio: ${s.aspect};`}>
+            <div class="shot-placeholder">
+              <div class="ph-grid" aria-hidden="true"></div>
+              <div class="ph-label">
+                <span class="mono-tag">{s.label}</span>
+                <span class="ph-coords">{String(i + 1).padStart(2, "0")} / {String(shots.length).padStart(2, "0")}</span>
+              </div>
+              <div class="ph-cross" aria-hidden="true"></div>
+            </div>
+          </div>
+          <figcaption>
+            <span class="cap-label">{s.label}</span>
+            <span class="cap-text">{s.caption}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <p class="screenshots-foot">
+      Once the captures are in, they replace the marbled placeholders —
+      same frames, same shadow, same caption rhythm. Drop the PNGs into
+      <code>/public/screenshots/01-home.png</code>, etc., and update the
+      <code>shots</code> array in <code>Screenshots.astro</code>.
+    </p>
+  </div>
+</section>
+
+<style>
+  .screenshots-head { max-width: 56rem; margin-bottom: clamp(3rem, 6vw, 5rem); }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  @media (min-width: 720px) {
+    .gallery {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    .shot { grid-column: span 3; }
+    .shot--tall { grid-column: span 6; }
+  }
+  @media (min-width: 1200px) {
+    .shot { grid-column: span 2; }
+    .shot--tall { grid-column: span 4; }
+    .gallery > :nth-child(2) { grid-column: span 2; }
+    .gallery > :nth-child(3) { grid-column: span 2; }
+    .gallery > :nth-child(4) { grid-column: span 3; }
+    .gallery > :nth-child(5) { grid-column: span 3; }
+    .gallery > :nth-child(6) { grid-column: span 2; }
+  }
+
+  .shot {
+    margin: 0;
+    display: flex; flex-direction: column;
+    gap: 1rem;
+  }
+
+  .shot-frame {
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    overflow: hidden;
+    box-shadow: var(--shadow-2);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .shot-frame:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-window);
+    border-color: var(--accent-line);
+  }
+
+  /* Placeholder — a marbled diagonal grid in accent tones, with a label */
+  .shot-placeholder {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(135deg, oklch(0.62 0.08 14 / 0.06), transparent 60%),
+      linear-gradient(45deg, oklch(0.62 0.08 320 / 0.05), transparent 60%),
+      var(--paper);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .ph-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+    background-size: 36px 36px;
+    opacity: 0.3;
+    mask-image: radial-gradient(70% 60% at 50% 50%, black, transparent);
+  }
+  .ph-cross {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(45deg, transparent 49.5%, var(--border-strong) 49.5%, var(--border-strong) 50.5%, transparent 50.5%),
+      linear-gradient(-45deg, transparent 49.5%, var(--border-strong) 49.5%, var(--border-strong) 50.5%, transparent 50.5%);
+    opacity: 0.18;
+    mask-image: radial-gradient(50% 50% at 50% 50%, black, transparent);
+  }
+  .ph-label {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-1);
+  }
+  .ph-coords {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+  }
+
+  figcaption {
+    display: flex; flex-direction: column;
+    gap: 0.35rem;
+    padding: 0 0.5rem;
+  }
+  .cap-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .cap-text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 38ch;
+  }
+
+  .screenshots-foot {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding: 1.25rem 1.5rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .screenshots-foot code {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.85em;
+    padding: 0.1em 0.4em;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent);
+  }
+</style>

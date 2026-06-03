@@ -1,0 +1,198 @@
+---
+import AppMockup from "./AppMockup.astro";
+---
+<section class="hero" data-folio>
+  <div class="container hero-container">
+    <div class="hero-text">
+      <p class="hero-eyebrow reveal reveal-1">
+        <span class="dot"></span>
+        <span>A desktop writing instrument</span>
+      </p>
+
+      <h1 class="hero-title">
+        <span class="reveal reveal-2 line">A quiet room</span>
+        <span class="reveal reveal-3 line">for the <em>long form.</em></span>
+      </h1>
+
+      <p class="hero-lede reveal reveal-4">
+        JustWrite is a single, unhurried desk —
+        for novels, novellas, and other works that take
+        more than an afternoon. Manuscript, world, voice,
+        audiobook. Stitched together carefully.
+      </p>
+
+      <div class="hero-ctas reveal reveal-5">
+        <a class="btn" href="https://github.com" data-cta="github">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .5C5.73.5.67 5.57.67 11.85c0 5 3.24 9.24 7.75 10.74.57.1.78-.25.78-.55v-2c-3.15.68-3.81-1.34-3.81-1.34-.52-1.31-1.27-1.66-1.27-1.66-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.24 3.34.95.1-.74.4-1.24.73-1.53-2.52-.29-5.16-1.26-5.16-5.6 0-1.24.44-2.25 1.17-3.04-.12-.29-.51-1.43.11-2.98 0 0 .96-.31 3.16 1.16.92-.26 1.9-.39 2.88-.39s1.96.13 2.88.39c2.2-1.47 3.16-1.16 3.16-1.16.62 1.55.23 2.69.11 2.98.73.79 1.17 1.8 1.17 3.04 0 4.35-2.64 5.3-5.17 5.59.41.35.78 1.04.78 2.1v3.11c0 .31.21.66.79.55 4.51-1.5 7.74-5.74 7.74-10.74C23.33 5.57 18.27.5 12 .5z"/>
+          </svg>
+          <span>View on GitHub</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="btn btn--ghost" href="#download">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+          </svg>
+          <span>Download for desktop</span>
+        </a>
+      </div>
+
+      <ul class="hero-meta reveal reveal-6" aria-label="Built with">
+        <li><span class="mono-tag">macOS</span></li>
+        <li><span class="mono-tag">Windows</span></li>
+        <li><span class="mono-tag">Linux</span></li>
+        <li class="sep">·</li>
+        <li><span class="hero-meta-em">Tauri</span></li>
+        <li><span class="hero-meta-em">Vue 3</span></li>
+        <li><span class="hero-meta-em">Rust</span></li>
+      </ul>
+    </div>
+
+    <div class="hero-mock reveal reveal-7">
+      <AppMockup />
+      <p class="hero-mock-caption">
+        <span class="mono-tag">Fig. 1</span>
+        <span>A chapter in progress. The right column tracks the day's session;
+        the left column is the spine of the book.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Decorative folio marker for the hero -->
+  <div class="hero-folio" aria-hidden="true">
+    <span class="line"></span>
+    <span class="text">page one</span>
+    <span class="line"></span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: clamp(8rem, 14vw, 12rem);
+    padding-bottom: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+  }
+  @media (min-width: 1080px) {
+    .hero-container {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    }
+  }
+
+  .hero-text { max-width: 36rem; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 1.5rem;
+  }
+  .hero-eyebrow .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  .hero-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    margin: 0;
+    color: var(--ink);
+  }
+  .hero-title .line {
+    display: block;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+    font-variation-settings: "SOFT" 70, "WONK" 1;
+  }
+
+  .hero-lede {
+    font-family: var(--font-serif);
+    font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+    line-height: 1.55;
+    color: var(--ink-2);
+    margin: 2rem 0 2.5rem;
+    max-width: 32rem;
+  }
+
+  .hero-ctas {
+    display: flex; flex-wrap: wrap; gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-meta {
+    display: flex; flex-wrap: wrap; align-items: center;
+    list-style: none;
+    margin: 0; padding: 0;
+    gap: 0.9rem 1.1rem;
+    color: var(--subtle);
+  }
+  .hero-meta li { display: inline-flex; }
+  .hero-meta .sep {
+    color: var(--accent);
+    opacity: 0.6;
+  }
+  .hero-meta-em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  /* Mockup column */
+  .hero-mock {
+    position: relative;
+    min-width: 0;
+  }
+  .hero-mock-caption {
+    margin: 1.5rem 0 0;
+    display: flex; gap: 0.7rem;
+    align-items: flex-start;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.875rem;
+    color: var(--muted);
+    max-width: 38rem;
+  }
+  .hero-mock-caption .mono-tag {
+    flex-shrink: 0;
+    font-style: normal;
+    color: var(--accent);
+    padding-top: 0.2em;
+  }
+
+  /* Page-one folio at the foot of the hero */
+  .hero-folio {
+    display: flex; align-items: center; gap: 1rem;
+    max-width: var(--measure-wide);
+    margin: clamp(4rem, 8vw, 6rem) auto 0;
+    padding: 0 var(--gutter);
+  }
+  .hero-folio .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+  }
+  .hero-folio .text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 12px;
+    color: var(--subtle);
+    letter-spacing: 0.04em;
+  }
+</style>
