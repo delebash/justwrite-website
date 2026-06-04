@@ -1,4 +1,6 @@
 ---
+const { roman = "VII" } = Astro.props;
+
 const faqs = [
   {
     q: "Is it really written entirely by Claude?",
@@ -37,7 +39,7 @@ const faqs = [
 <section id="faq" class="faq" data-folio>
   <div class="container">
     <header class="faq-head">
-      <p class="eyebrow"><span class="roman">VII</span><span>A few questions</span></p>
+      <p class="eyebrow"><span class="roman">{roman}</span><span>A few questions</span></p>
       <h2 class="section-title">The obvious <em>asked plainly.</em></h2>
       <p class="section-lede">
         Eight things people ask before downloading. Open one to read,

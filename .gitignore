@@ -5,6 +5,7 @@ dist/
 # generated docs pulled from justwrite-app releases by scripts/sync-docs.mjs
 src/pages/docs/
 src/data/docs-toc.json
+.docs-cache/
 
 # dependencies
 node_modules/

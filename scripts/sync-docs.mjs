@@ -21,7 +21,6 @@ import { readFile, writeFile, mkdir, rm, readdir, cp, stat } from "node:fs/promi
 import { resolve, dirname, basename, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
-import { tmpdir } from "node:os";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const TARGET = resolve(ROOT, "src/pages/docs");
@@ -153,8 +152,14 @@ async function fromRelease() {
     throw new Error(`Download failed: ${res.status} ${res.statusText} from ${url}`);
   }
   const buf = Buffer.from(await res.arrayBuffer());
-  const tmpRoot = await mkdir(join(tmpdir(), `jw-docs-${Date.now()}`), { recursive: true });
-  const tmpDir = tmpRoot || join(tmpdir(), `jw-docs-${Date.now()}`);
+  // Stage under the website root rather than os.tmpdir() — on Windows
+  // the OS temp dir resolves with a `\\?\` extended-path prefix that
+  // bash-spawned cmd.exe can't use as a cwd ("UNC paths are not
+  // supported"). A repo-local cache dir sidesteps that and gets
+  // .gitignored alongside generated docs.
+  const tmpDir = resolve(ROOT, ".docs-cache");
+  await rm(tmpDir, { recursive: true, force: true });
+  await mkdir(tmpDir, { recursive: true });
   await writeFile(join(tmpDir, "docs.tar.gz"), buf);
   // bsdtar/GNU tar handles -xzf on Windows 10+/macOS/Linux uniformly.
   execSync(`tar -xzf docs.tar.gz`, { cwd: tmpDir, stdio: "inherit" });

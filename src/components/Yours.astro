@@ -1,4 +1,6 @@
 ---
+const { roman = "IV" } = Astro.props;
+
 const pillars = [
   {
     n: "i",
@@ -26,7 +28,7 @@ const pillars = [
 <section id="yours" class="yours" data-folio>
   <div class="container">
     <header class="yours-head">
-      <p class="eyebrow"><span class="roman">IV</span><span>What you keep</span></p>
+      <p class="eyebrow"><span class="roman">{roman}</span><span>What you keep</span></p>
       <h2 class="section-title">Yours, <em>on your desk.</em></h2>
       <p class="section-lede">
         Most writing tools today rent you a chair in their building.

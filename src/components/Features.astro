@@ -1,39 +1,41 @@
 ---
+const { roman = "II" } = Astro.props;
+
 const features = [
   {
     label: "01 · Manuscript",
     title: "A serif page that respects the line.",
-    body: "Chapters, scenes, parts. Drop caps and scene breaks. A continuous-scroll mode that stitches scenes into one long page — so your prose reads the way it will be read.",
+    body: "A typesetter's page, not a notes app — with scene breaks where you mean them and a continuous reading mode that lets a chapter breathe end to end. So your prose reads, while you write it, the way it will be read.",
     span: "tall",
   },
   {
     label: "02 · AI",
     title: "An AI desk that knows your book.",
-    body: "Any OpenAI-compatible endpoint — OpenAI, Ollama, LM Studio, llama.cpp. Ask the book a question and get citations back to chapters. Rewrite, expand, tighten, or continue from the cursor. Run a critique. Set prose rules. Pick a different model per task; your keys never leave the machine.",
+    body: "Bring your own model — OpenAI, or a local one running on your machine — and ask the book questions about itself. Rewrites, critiques, and continuations arrive with citations back to the chapter they came from. Your keys, your prose, your call.",
     span: "wide",
   },
   {
     label: "03 · World",
     title: "A notebook for the world.",
-    body: "Characters with traits and arcs. Locations, objects, groups, architecture documents. A worldbuilding wiki with tags. Per-entity event timelines and a mind-map of relations. Soft-delete trash with restore.",
+    body: "Every person, place, and thing the story knows about, in one quiet place. Tag them, map their relations, attach a timeline. So when you've forgotten which town the rivermouth was in, the book remembers.",
     span: "tall",
   },
   {
     label: "04 · Audiobook",
     title: "An audiobook, in .m4b, with chapters.",
-    body: "Detect speakers line-by-line. Cast voices to characters and the narrator. Render TTS through any compatible provider, concat with silence, mux to AAC inside an .m4b with chapter markers and cover art. Hand it to Audible. Or just listen.",
+    body: "Cast voices for each character, render the manuscript through any TTS you can reach, and out the other side is a real audiobook — chapter markers, cover art, the lot. Drop it into Audible or Apple Books and it just plays.",
     span: "wide",
   },
   {
     label: "05 · Manuscript Export",
     title: "Hand it off, beautifully.",
-    body: "A typeset PDF with a TOC and part covers. A Word doc with a live, auto-refreshing TOC. An EPUB 3 your reader will accept. Your cover image, embedded everywhere it should be.",
+    body: "PDF for the printer, DOCX for the editor, EPUB for the reader. Tables of contents that build themselves; your cover where it should be. The kind of files you can send to a stranger without apologising for them.",
     span: "tall",
   },
   {
     label: "06 · Reflection",
     title: "An honest record of the work.",
-    body: "Daily word counts. Streaks. A fortnight at a glance. A cadence heatmap. Character presence per chapter. Dialogue versus narration. A thirty-day pace chart. Undo every keystroke if you need to.",
+    body: "Daily word counts, streaks, a fortnight at a glance. Quiet evidence of what you actually did, on the days you weren't sure. And an undo deep enough to forgive an afternoon.",
     span: "tall",
   },
 ];
@@ -41,7 +43,7 @@ const features = [
 <section id="features" class="features" data-folio>
   <div class="container">
     <header class="features-head">
-      <p class="eyebrow"><span class="roman">II</span><span>The instrument</span></p>
+      <p class="eyebrow"><span class="roman">{roman}</span><span>The instrument</span></p>
       <h2 class="section-title">Six rooms, <em>one house.</em></h2>
       <p class="section-lede">
         Built for the part of writing that takes years.

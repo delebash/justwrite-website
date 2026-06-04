@@ -1,28 +1,19 @@
 ---
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
-import Features from "../components/Features.astro";
-import Inside from "../components/Inside.astro";
 import Yours from "../components/Yours.astro";
-import ClaudeStory from "../components/ClaudeStory.astro";
 import Screenshots from "../components/Screenshots.astro";
-import FAQ from "../components/FAQ.astro";
+import ClaudeStory from "../components/ClaudeStory.astro";
 import Footer from "../components/Footer.astro";
 ---
 <Base>
   <Hero />
   <div class="scene-break" aria-hidden="true"></div>
-  <Features />
+  <Yours roman="II" />
   <div class="scene-break" aria-hidden="true"></div>
-  <Inside />
+  <Screenshots roman="III" />
   <div class="scene-break" aria-hidden="true"></div>
-  <Yours />
+  <ClaudeStory roman="IV" />
   <div class="scene-break" aria-hidden="true"></div>
-  <ClaudeStory />
-  <div class="scene-break" aria-hidden="true"></div>
-  <Screenshots />
-  <div class="scene-break" aria-hidden="true"></div>
-  <FAQ />
-  <div class="scene-break" aria-hidden="true"></div>
-  <Footer />
+  <Footer roman="V" />
 </Base>

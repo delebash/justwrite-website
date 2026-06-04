@@ -1,10 +1,14 @@
 ---
+// The big "Find it" download CTA card. Used only on Overview — the
+// slim site-wide footer (brand / meta / links) is rendered by
+// PageFooter.astro from inside the Base layout.
+const { roman = "V" } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 <section id="download" class="cta" data-folio>
   <div class="container">
     <div class="cta-card">
-      <p class="eyebrow"><span class="roman">VIII</span><span>Find it</span></p>
+      <p class="eyebrow"><span class="roman">{roman}</span><span>Find it</span></p>
       <h2 class="cta-title">Take it for an <em>evening.</em></h2>
       <p class="cta-lede">
         JustWrite is free and open. Download it for desktop,
@@ -45,31 +49,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     </div>
   </div>
 </section>
-
-<footer class="page-footer">
-  <div class="container footer-container">
-    <div class="foot-brand">
-      <span class="foot-mark">J</span>
-      <span class="foot-name"><em>JustWrite</em></span>
-    </div>
-    <div class="foot-meta">
-      <p>
-        A typographic homage to the works that take more than an afternoon.
-        Set in <em>Fraunces</em>, <em>Spline Sans</em>, and <em>Spline Sans Mono</em>.
-      </p>
-      <p class="foot-credit">
-        Code written by Claude. Words written by humans. Read more in
-        <a href="#colophon">the colophon</a>.
-      </p>
-    </div>
-    <div class="foot-links">
-      <a href={`${base}/docs/`}>Docs</a>
-      <a href="https://github.com/delebash/justwrite-app">GitHub</a>
-      <a href="https://github.com/anthropics/claude-code">Claude Code</a>
-      <a href="#top">↑ Top</a>
-    </div>
-  </div>
-</footer>
 
 <style>
   .cta {
@@ -151,64 +130,4 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     font-size: 0.95rem;
     color: var(--ink-2);
   }
-
-  .page-footer {
-    padding: 3rem var(--gutter) 4rem;
-    border-top: 1px solid var(--border);
-  }
-  .footer-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    align-items: end;
-  }
-  @media (min-width: 720px) {
-    .footer-container {
-      grid-template-columns: auto 1fr auto;
-    }
-  }
-
-  .foot-brand { display: flex; align-items: center; gap: 0.6rem; }
-  .foot-mark {
-    width: 26px; height: 26px;
-    border-radius: 6px;
-    background: linear-gradient(135deg, var(--accent), oklch(0.52 0.10 320));
-    color: white; display: grid; place-items: center;
-    font-family: var(--font-serif); font-style: italic;
-    font-weight: 700; font-size: 14px;
-  }
-  .foot-name {
-    font-family: var(--font-serif);
-    font-size: 1.2rem;
-    color: var(--ink);
-  }
-  .foot-name em { font-style: italic; }
-
-  .foot-meta { color: var(--muted); }
-  .foot-meta p {
-    font-family: var(--font-serif);
-    font-size: 0.95rem;
-    line-height: 1.55;
-    margin: 0 0 0.5rem;
-  }
-  .foot-meta em { color: var(--ink-2); font-style: italic; }
-  .foot-credit a {
-    color: var(--accent);
-    text-decoration: underline;
-    text-decoration-color: var(--accent-line);
-    text-underline-offset: 3px;
-  }
-  .foot-credit a:hover {
-    text-decoration-color: var(--accent);
-  }
-
-  .foot-links {
-    display: flex; gap: 1.5rem;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .foot-links a:hover { color: var(--accent); }
 </style>

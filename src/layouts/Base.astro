@@ -1,10 +1,20 @@
 ---
 import "../styles/global.css";
+import PageFooter from "../components/PageFooter.astro";
 
 const { title = "JustWrite — A writing instrument for the long form", description = "A desktop writing app for novelists. Manuscript editor, AI providers, audiobook export — built entirely by Claude Code." } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const path = Astro.url.pathname.replace(/\/$/, "");
+const homePath = base || "/";
+
+// Active-link detection. Docs has many sub-routes, so match by prefix.
+const onOverview = path === base || path === "" || path === "/";
+const onFeatures = path === `${base}/features`;
+const onDocs = path.startsWith(`${base}/docs`);
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,20 +47,18 @@ const { title = "JustWrite — A writing instrument for the long form", descript
     </script>
   </head>
   <body>
-    <!-- Persistent page chrome: brand left, running head center, folio right -->
+    <!-- Persistent page chrome: brand left, nav center, folio right -->
     <div class="page-chrome">
-      <a class="brand-lockup" href="#top" aria-label="JustWrite home">
+      <a class="brand-lockup" href={homePath} aria-label="JustWrite home">
         <span class="mark">J</span>
         <span class="name">JustWrite</span>
       </a>
 
-      <div class="running-head" aria-hidden="true">
-        <span>VOL. I</span>
-        <span class="sep">·</span>
-        <span>A WRITING INSTRUMENT</span>
-        <span class="sep">·</span>
-        <span>FOR THE LONG FORM</span>
-      </div>
+      <nav class="page-nav" aria-label="Primary">
+        <a href={homePath} class:list={["nav-link", { active: onOverview }]}>Overview</a>
+        <a href={`${base}/features`} class:list={["nav-link", { active: onFeatures }]}>Features</a>
+        <a href={`${base}/docs/`} class:list={["nav-link", { active: onDocs }]}>Docs</a>
+      </nav>
 
       <div class="folio">
         <span class="num" id="folio-num">i</span>
@@ -65,6 +73,41 @@ const { title = "JustWrite — A writing instrument for the long form", descript
     <main id="top">
       <slot />
     </main>
+
+    <PageFooter />
+
+    <style>
+      .page-nav {
+        display: flex;
+        gap: clamp(1rem, 3vw, 2rem);
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+      .nav-link {
+        color: var(--muted);
+        text-decoration: none;
+        position: relative;
+        padding: 4px 0;
+        transition: color 150ms ease;
+      }
+      .nav-link:hover { color: var(--ink); }
+      .nav-link.active {
+        color: var(--accent);
+      }
+      .nav-link.active::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: -2px;
+        height: 1px;
+        background: var(--accent);
+      }
+      @media (max-width: 640px) {
+        .page-nav { gap: 0.9rem; font-size: 10px; letter-spacing: 0.18em; }
+      }
+    </style>
 
     <script is:inline>
       // Theme toggle

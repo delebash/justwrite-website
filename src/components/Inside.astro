@@ -1,155 +1,61 @@
 ---
+const { roman = "III" } = Astro.props;
+
 const chapters = [
   {
     n: "I",
     label: "Manuscript",
     title: "The desk where you write.",
     body: "Rich text from a literary toolbar — bold, italic, headings, lists, links, tables, images. Scene boundaries with editable titles. Continuous mode that stitches scenes into one long page. Focus mode that hides everything else. Two page layouts: full-bleed or a traditional sheet with running head and folio. Find and replace. Smart quotes and em-dashes on the fly. Drag-to-reorder for scenes, chapters, parts.",
-    tags: [
-      "rich editor",
-      "scene boundaries",
-      "continuous scroll",
-      "focus mode",
-      "page layout",
-      "running head & folio",
-      "smart quotes",
-      "find & replace",
-      "drag to reorder",
-      "image insert",
-    ],
   },
   {
     n: "II",
     label: "Story world",
     title: "The world around the book.",
     body: "Characters with traits, motivations, and per-chapter arcs. Locations, objects, groups. Four architecture documents — premise, fabula, setting, global notes. A free-form worldbuilding wiki with categories and tags. Notes. Per-entity event timelines that link back to scenes. A relations mind-map of who is in what with whom.",
-    tags: [
-      "characters",
-      "locations",
-      "objects",
-      "groups",
-      "architecture",
-      "worldbuilding wiki",
-      "notes",
-      "event timelines",
-      "mind-map of relations",
-      "@-mentions",
-    ],
   },
   {
     n: "III",
     label: "Plot",
     title: "The bones of the story.",
     body: "Narrative strands tracked across multi-beat arcs. Built-in plot templates — Hero's Journey, three-act — scaffolded with one click. A visual plot board where each strand reads across chapters. Scene-level linking to characters, places, objects, and strands. Per-scene status — To do · Draft · Revise · Done — surfaced everywhere as colour-coded donuts.",
-    tags: [
-      "narrative strands",
-      "plot templates",
-      "plot board",
-      "scene linking",
-      "status tracking",
-      "parts structure",
-      "project timeline",
-    ],
   },
   {
     n: "IV",
     label: "AI",
-    title: "An AI desk, your way.",
+    title: "Models, on your terms.",
     body: "Add any OpenAI-compatible endpoint — OpenAI, Ollama, LM Studio, llama.cpp, vLLM — like printers in a list. A per-feature model picker: one model for chat, another for critique, another for entity sweep. Ask-the-book chat with hybrid BM25 + vector retrieval and citations back to chapters. In-editor bubble actions: rewrite, expand, tighten, continue from cursor. Prose rules applied to selections, with a diff to accept or discard. A Writer Lab for critique, pacing, and ending feedback. A usage ledger that estimates the cost.",
-    tags: [
-      "provider registry",
-      "per-feature model",
-      "ask-the-book chat",
-      "BM25 + vector RAG",
-      "citations",
-      "rewrite / expand / tighten",
-      "continue from cursor",
-      "prose rules",
-      "AI diff preview",
-      "Writer Lab",
-      "entity sweep",
-      "smart cast",
-      "usage & cost ledger",
-    ],
   },
   {
     n: "V",
     label: "Studio",
-    title: "An audiobook from the same desk.",
+    title: "From cast list to finished file.",
     body: "A cast list mapping each character — and the narrator — to a voice from any TTS provider you've added. LLM-detected speakers per chapter, line by line, cached. A render queue across chapters. WAV concatenation with timed silences at speaker changes. Final mux to .m4b with ID3 chapter markers, cover art, and metadata. Plays in Audible, Apple Books, Plex — anything that reads M4B.",
-    tags: [
-      "voice catalog",
-      "cast assignment",
-      "speaker detection",
-      "narrator voice",
-      "render queue",
-      "wav concat with silence",
-      "m4b export",
-      "ID3 chapter markers",
-      "cover art & metadata",
-    ],
   },
   {
     n: "VI",
     label: "Reflection",
-    title: "An honest record of the work.",
+    title: "Two views of the work.",
     body: "The Home dashboard: today's session, streak, fortnight, cadence — and a button that drops you back into the chapter you were last in. The Analysis surface: project KPIs, status donuts, narrative-strand distribution, character-presence heatmap, dialogue versus narration versus interior monologue, and a thirty-day pace chart drawn from the session log.",
-    tags: [
-      "today's session",
-      "streak",
-      "fortnight",
-      "cadence heatmap",
-      "project KPIs",
-      "status donuts",
-      "presence heatmap",
-      "dialogue mix",
-      "30-day pace",
-    ],
   },
   {
     n: "VII",
     label: "Import & Export",
     title: "What goes in, what comes out.",
     body: "Import DOCX, EPUB, ODT, Markdown, or plain text — with chapter auto-detection, image extraction, and smart-quote normalisation. Optional entity sweep on import to spot new characters and places. Export to PDF (TOC, part covers, cover image), DOCX (live auto-refreshing TOC), EPUB 3, or .m4b audiobook. Strip scene markers on export if you prefer.",
-    tags: [
-      "import DOCX / EPUB / ODT",
-      "import Markdown / TXT",
-      "chapter auto-split",
-      "image extraction",
-      "smart-quote normalisation",
-      "entity sweep on import",
-      "PDF with TOC",
-      "DOCX live TOC",
-      "EPUB 3",
-      ".m4b audiobook",
-      "cover image",
-    ],
   },
   {
     n: "VIII",
     label: "Appearance",
     title: "The room, set up your way.",
     body: "Five built-in theme presets — Studio, Fine Press, Ivory Press, Calm Modern, Editorial. Light, dark, or follow the system. Four font pairings, with per-surface overrides. An accent-hue slider and a gold-hue slider. Surface and paper tints. Ink palettes. Button radius, density, and label-case. UI scale. Save your mix as a preset of your own.",
-    tags: [
-      "5 theme presets",
-      "light / dark / system",
-      "4 font pairings",
-      "accent hue slider",
-      "gold hue slider",
-      "surface tints",
-      "paper tints",
-      "ink palette",
-      "button radius / density / case",
-      "UI scale",
-      "save custom presets",
-    ],
   },
 ];
 ---
 <section id="inside" class="inside" data-folio>
   <div class="container">
     <header class="inside-head">
-      <p class="eyebrow"><span class="roman">III</span><span>A deeper look</span></p>
+      <p class="eyebrow"><span class="roman">{roman}</span><span>A deeper look</span></p>
       <h2 class="section-title">Everything in <em>the rooms.</em></h2>
       <p class="section-lede">
         The six rooms above are how it's organised. Here is what is actually
@@ -166,9 +72,6 @@ const chapters = [
           </div>
           <h3 class="chap-title">{ch.title}</h3>
           <p class="chap-body">{ch.body}</p>
-          <ul class="chap-tags">
-            {ch.tags.map((t) => <li>{t}</li>)}
-          </ul>
         </article>
       ))}
     </div>
@@ -236,31 +139,7 @@ const chapters = [
     font-size: clamp(0.98rem, 1.15vw, 1.05rem);
     line-height: 1.6;
     color: var(--ink-2);
-    margin: 0 0 1.5rem;
+    margin: 0;
     max-width: 42ch;
-  }
-
-  .chap-tags {
-    list-style: none;
-    margin: 0; padding: 0;
-    display: flex; flex-wrap: wrap;
-    gap: 0.4rem 0.5rem;
-  }
-  .chap-tags li {
-    display: inline-flex;
-    padding: 0.25rem 0.55rem;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    color: var(--ink-2);
-    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
-  }
-  .chap-tags li:hover {
-    background: var(--accent-soft);
-    color: var(--accent-ink);
-    border-color: var(--accent-line);
   }
 </style>

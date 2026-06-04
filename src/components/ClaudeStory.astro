@@ -1,6 +1,7 @@
 ---
 // The "Built entirely by Claude Code" colophon.
 // Tone: personal, reflective. NOT boastful.
+const { roman = "V" } = Astro.props;
 ---
 <section id="colophon" class="colophon" data-folio>
   <div class="container colophon-container">
@@ -29,7 +30,7 @@
     </aside>
 
     <article class="colophon-text">
-      <p class="eyebrow"><span class="roman">V</span><span>A colophon</span></p>
+      <p class="eyebrow"><span class="roman">{roman}</span><span>A colophon</span></p>
       <h2 class="section-title">Written by a machine.<br/><em>Read by a person.</em></h2>
 
       <div class="prose">
