@@ -1,0 +1,168 @@
+---
+const faqs = [
+  {
+    q: "Is it really written entirely by Claude?",
+    a: "Yes. The human who runs the project hasn't written any of the code — they shape it by reading it, using it, and telling Claude what to change. The colophon above is the longer version of that story."
+  },
+  {
+    q: "Where does my manuscript live?",
+    a: "On your computer. Projects are stored as files in your filesystem; nothing is uploaded to a server. You back it up the way you back up your other files."
+  },
+  {
+    q: "Which AI providers work with it?",
+    a: "Anything that speaks OpenAI's chat-completions API. OpenAI proper, Ollama, LM Studio, llama.cpp, vLLM, your own deployment. Add a provider in Settings → AI providers; pick a model per task."
+  },
+  {
+    q: "Do I need to be online?",
+    a: "Only if your chosen AI model is a cloud one. Run Ollama or LM Studio locally and the whole loop — manuscript, editor, AI, audiobook — works with the WiFi off."
+  },
+  {
+    q: "What does it cost?",
+    a: "The app is free. AI usage is whatever your chosen provider charges. Local models cost nothing to run; cloud models cost what the API charges you. JustWrite never sees the bill."
+  },
+  {
+    q: "What platforms does it run on?",
+    a: "macOS, Windows, and Linux. The same source builds for all three via Tauri — a Rust shell around a webview — so behaviour is consistent across platforms."
+  },
+  {
+    q: "Can I import an existing manuscript?",
+    a: "Yes. DOCX, plain text, and Markdown. The importer splits into parts, chapters, and scenes where it can detect the structure; otherwise you arrange it yourself."
+  },
+  {
+    q: "How does the audiobook export work?",
+    a: "Smart-cast your characters to voices, render TTS line by line, then mux the chapter WAVs to AAC inside an .m4b container with chapter markers. The result plays in Audible, Apple Books, Plex — anything that reads M4B."
+  },
+];
+---
+<section id="faq" class="faq" data-folio>
+  <div class="container">
+    <header class="faq-head">
+      <p class="eyebrow"><span class="roman">VII</span><span>A few questions</span></p>
+      <h2 class="section-title">The obvious <em>asked plainly.</em></h2>
+      <p class="section-lede">
+        Eight things people ask before downloading. Open one to read,
+        or read them all — there's no wrong order.
+      </p>
+    </header>
+
+    <ol class="faq-list">
+      {faqs.map((f, i) => (
+        <li class="faq-item">
+          <details>
+            <summary>
+              <span class="faq-num">{String(i + 1).padStart(2, "0")}</span>
+              <span class="faq-q">{f.q}</span>
+              <span class="faq-marker" aria-hidden="true">
+                <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                  <path d="M5 8l5 5 5-5"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="faq-a"><p>{f.a}</p></div>
+          </details>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .faq {
+    background:
+      radial-gradient(700px 500px at 50% 0%, oklch(0.62 0.10 80 / 0.04), transparent 60%);
+  }
+
+  .faq-head { max-width: 56rem; margin-bottom: clamp(3rem, 6vw, 5rem); }
+
+  .faq-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    max-width: 56rem;
+    border-top: 1px solid var(--border-strong);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  details {
+    padding: 0;
+  }
+  details > summary {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.5rem 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: color 0.18s ease;
+  }
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary:hover { color: var(--accent); }
+  details > summary:hover .faq-num { color: var(--accent); }
+
+  .faq-num {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.18s ease;
+  }
+  .faq-q {
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 1.6vw, 1.45rem);
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+  }
+  .faq-marker {
+    display: inline-grid; place-items: center;
+    width: 32px; height: 32px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    color: var(--muted);
+    transition: transform 0.25s cubic-bezier(.4,.2,.2,1), background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+  details[open] .faq-marker {
+    transform: rotate(180deg);
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+    color: var(--accent);
+  }
+  details > summary:hover .faq-marker {
+    border-color: var(--accent-line);
+    color: var(--accent);
+  }
+
+  .faq-a {
+    padding: 0 0 1.75rem calc(1.25rem + 1.7em);
+    max-width: 62ch;
+    animation: faq-reveal 0.36s cubic-bezier(.2,.7,.2,1);
+  }
+  .faq-a p {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  @keyframes faq-reveal {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .faq-a {
+      padding-left: 0;
+    }
+    details > summary {
+      gap: 0.9rem;
+      padding: 1.25rem 0;
+    }
+  }
+</style>

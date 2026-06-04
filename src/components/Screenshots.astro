@@ -1,0 +1,177 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const shot = (name) => `${base}/screenshots/${name}`;
+
+// Real screenshots from the app. Add more files to /public/screenshots/
+// and append to this array.
+const shots = [
+  {
+    file: "home-light.png",
+    label: "Home",
+    title: "A daily ledger of the work.",
+    caption: "Word goal, deadline, the day's session, fortnight, cadence — and a button that drops you back into the chapter you were last in.",
+    alt: "JustWrite Home — project goal, today's session, fortnight, cadence",
+    span: "wide",
+  },
+  {
+    file: "analysis.png",
+    label: "Analysis",
+    title: "A reading of the work.",
+    caption: "KPIs at the top, then a 30-day pace chart, a status donut, narrative strands ranked by word count. Honest numbers, no congratulations.",
+    alt: "JustWrite Analysis — KPIs, pace, status donut, strands by word count",
+    span: "wide",
+  },
+  {
+    file: "plotboard.png",
+    label: "Plot board",
+    title: "Strands across chapters.",
+    caption: "Each narrative strand reads as a row; each chapter a column. Drop a beat on the grid and it links back to its scenes. Templates included — Hero's Journey, three-act — or build one from scratch.",
+    alt: "JustWrite Plot board — five narrative strands across thirteen chapters",
+    span: "wide",
+  },
+  {
+    file: "studio.png",
+    label: "Studio · Cast",
+    title: "A voice for everyone in the book.",
+    caption: "Assign each character — and the narrator — to a voice from any TTS provider you've added. Smart-cast suggests pairings; render the chapter into an .m4b when you're ready.",
+    alt: "JustWrite Studio — Cast & voices, characters with voice pickers, voice library",
+    span: "wide",
+  },
+  {
+    file: "characters.png",
+    label: "Characters",
+    title: "Traits, arcs, and the lie they tell.",
+    caption: "Each character has wants, needs, the lie they tell themselves, the truth they deny — and a three-act arc (Beginning · Midpoint · End). Add an image; the AI sees it in context.",
+    alt: "JustWrite Characters — protagonist detail with traits and three-act arc",
+    span: "wide",
+  },
+  {
+    file: "worldbuilding.png",
+    label: "Worldbuilding",
+    title: "A wiki for the world around the book.",
+    caption: "Free-form articles organised by category — Geography, History, Cultures, Languages, Factions, Lore & myth. Tag them; cross-reference them; search them.",
+    alt: "JustWrite Worldbuilding — categories with articles for the novel's world",
+    span: "wide",
+  },
+  {
+    file: "settings-ai.png",
+    label: "Settings · AI",
+    title: "Bring your own. Plural.",
+    caption: "Five providers configured: Ollama and LM Studio running locally, OpenAI in the cloud, an OpenAI-compatible TTS server, and the OS's Web Speech voices. Pick a different model per task.",
+    alt: "JustWrite Settings — AI providers list with five configured endpoints",
+    span: "wide",
+  },
+  {
+    file: "settings-dark.png",
+    label: "Settings · Appearance",
+    title: "Theme presets, or tune your own.",
+    caption: "Studio, Fine Press, Ivory Press, Calm Modern, Editorial. Light, dark, or follow the system. Save your mix as a preset.",
+    alt: "JustWrite Settings — Appearance theme presets, dark mode",
+    span: "wide",
+  },
+];
+---
+<section id="sketches" class="screenshots" data-folio>
+  <div class="container">
+    <header class="screenshots-head">
+      <p class="eyebrow"><span class="roman">VI</span><span>Sketches</span></p>
+      <h2 class="section-title">A few more <em>rooms.</em></h2>
+      <p class="section-lede">
+        Real captures from the working app, against a real novel-in-progress.
+        Eight rooms of the house — the chapter editor is up in the hero.
+      </p>
+    </header>
+
+    <div class="gallery">
+      {shots.map((s, i) => (
+        <figure class={`shot shot--${s.span}`} style={`--i:${i}`}>
+          <div class="shot-frame">
+            <img src={shot(s.file)} alt={s.alt} loading="lazy" decoding="async" />
+          </div>
+          <figcaption>
+            <span class="cap-label">{s.label}</span>
+            <span class="cap-title">{s.title}</span>
+            <span class="cap-text">{s.caption}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .screenshots-head { max-width: 56rem; margin-bottom: clamp(3rem, 6vw, 5rem); }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .shot {
+    margin: 0;
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .shot {
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    }
+    .shot:nth-child(even) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);
+    }
+    .shot:nth-child(even) .shot-frame { order: 2; }
+    .shot:nth-child(even) figcaption { order: 1; }
+  }
+
+  .shot-frame {
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    overflow: hidden;
+    box-shadow: var(--shadow-2);
+    line-height: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .shot-frame:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-window);
+    border-color: var(--accent-line);
+  }
+  .shot-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  figcaption {
+    display: flex; flex-direction: column;
+    gap: 0.6rem;
+    padding: 0 0.25rem;
+  }
+  .cap-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .cap-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 2vw, 1.65rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin-top: 0.2rem;
+  }
+  .cap-text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 38ch;
+  }
+</style>

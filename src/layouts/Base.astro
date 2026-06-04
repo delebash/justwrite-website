@@ -77,8 +77,8 @@ const { title = "JustWrite — A writing instrument for the long form", descript
       });
 
       // Folio number cycles through roman numerals as you scroll past sections.
-      // i → ii → iii → iv
-      const numerals = ["i", "ii", "iii", "iv"];
+      // i → ii → iii → iv → v → vi → vii → viii
+      const numerals = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii"];
       const sections = Array.from(document.querySelectorAll("section[data-folio]"));
       const folio = document.getElementById("folio-num");
       if (folio && sections.length && "IntersectionObserver" in window) {

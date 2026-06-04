@@ -1,0 +1,168 @@
+---
+const pillars = [
+  {
+    n: "i",
+    label: "Local first",
+    title: "On your machine.",
+    body: "Your manuscript is a file. It lives on your computer, in your filesystem, where you can back it up, copy it, archive it. No account, no upload, no waiting for a server.",
+    tag: "no cloud · no account",
+  },
+  {
+    n: "ii",
+    label: "Your model, your keys",
+    title: "Any OpenAI-compatible endpoint.",
+    body: "OpenAI proper. Ollama. LM Studio. llama.cpp. vLLM. Anything that speaks the standard chat-completions API. Run a local model and the loop is fully offline — manuscript, editor, AI, all on your machine.",
+    tag: "BYO model · keys never leave",
+  },
+  {
+    n: "iii",
+    label: "Free, and open",
+    title: "Source on GitHub.",
+    body: "No subscription. No paywalled feature tier. Read the code, fork it, audit it, build it yourself. Pay only what your chosen AI provider charges — which, for local models, is nothing.",
+    tag: "MIT · zero-cost runtime",
+  },
+];
+---
+<section id="yours" class="yours" data-folio>
+  <div class="container">
+    <header class="yours-head">
+      <p class="eyebrow"><span class="roman">IV</span><span>What you keep</span></p>
+      <h2 class="section-title">Yours, <em>on your desk.</em></h2>
+      <p class="section-lede">
+        Most writing tools today rent you a chair in their building.
+        JustWrite gives you the chair. The book, the table, the lamp —
+        all of it stays at your house.
+      </p>
+    </header>
+
+    <div class="pillars">
+      {pillars.map((p) => (
+        <article class="pillar">
+          <div class="pillar-head">
+            <span class="pillar-n">{p.n}</span>
+            <span class="pillar-label">{p.label}</span>
+          </div>
+          <h3 class="pillar-title">{p.title}</h3>
+          <p class="pillar-body">{p.body}</p>
+          <p class="pillar-tag"><span class="dot"></span>{p.tag}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="yours-foot">
+      <span class="aside">
+        Compare: most modern writing apps make a copy of your novel and store it
+        on a server you don't own, behind a subscription you'll keep paying after
+        the book is finished. <em>We took a different lap.</em>
+      </span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .yours {
+    background:
+      radial-gradient(800px 500px at 0% 0%, oklch(0.62 0.10 80 / 0.05), transparent 60%),
+      radial-gradient(800px 500px at 100% 100%, oklch(0.62 0.10 14 / 0.05), transparent 60%);
+  }
+
+  .yours-head { max-width: 56rem; margin-bottom: clamp(3rem, 6vw, 5rem); }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-strong);
+  }
+  @media (min-width: 900px) {
+    .pillars {
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border-strong);
+      border-bottom: 1px solid var(--border-strong);
+    }
+  }
+
+  .pillar {
+    padding: 2.5rem clamp(1.5rem, 3vw, 2.25rem) 2.5rem 0;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  @media (min-width: 900px) {
+    .pillar {
+      padding: 2.75rem clamp(2rem, 3vw, 2.75rem);
+      border-bottom: 0;
+      border-right: 1px solid var(--border);
+    }
+    .pillar:last-child { border-right: 0; }
+  }
+  .pillar:last-child { border-bottom: 0; }
+
+  .pillar-head {
+    display: flex; align-items: baseline; gap: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  .pillar-n {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+  .pillar-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .pillar-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 2vw, 1.7rem);
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin: 0 0 1rem;
+    max-width: 22ch;
+  }
+  .pillar-body {
+    font-family: var(--font-ui);
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-2);
+    margin: 0 0 1.5rem;
+    max-width: 36ch;
+  }
+  .pillar-tag {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pillar-tag .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .yours-foot {
+    margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+    max-width: 56rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .yours-foot em {
+    color: var(--ink);
+    font-style: italic;
+  }
+  .yours-foot .aside { display: block; }
+</style>
