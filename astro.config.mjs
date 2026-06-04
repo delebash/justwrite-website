@@ -4,8 +4,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   // Update `site` to your final URL. If you deploy under a custom domain,
   // remove `base`. If you deploy at github.io/<repo>/, set base accordingly.
-  site: 'https://YOUR-USERNAME.github.io',
-  // base: '/justwrite-website',
+  site: 'https://delebash.github.io/justwrite-website',
   build: {
     inlineStylesheets: 'auto'
   },
