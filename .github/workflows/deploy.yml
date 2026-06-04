@@ -4,6 +4,11 @@ on:
   push:
     branches: [main, master]
   workflow_dispatch:
+  # Triggered by justwrite-app's release workflow when a new app release
+  # is published. The prebuild step in package.json fetches docs.tar.gz
+  # from the latest release, so the site rebuilds with the new docs.
+  repository_dispatch:
+    types: [docs-updated]
 
 permissions:
   contents: read

@@ -4,11 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/sync-docs.mjs --from local --silent-if-missing",
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node scripts/sync-docs.mjs --from release --silent-if-missing",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync-docs:local": "node scripts/sync-docs.mjs --from local",
+    "sync-docs:release": "node scripts/sync-docs.mjs --from release"
   },
   "dependencies": {
     "astro": "^6.4.3"
