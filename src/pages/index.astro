@@ -1,19 +1,14 @@
 ---
+// Overview — the structured overview of what the instrument does.
 import Base from "../layouts/Base.astro";
-import Hero from "../components/Hero.astro";
-import Yours from "../components/Yours.astro";
-import Screenshots from "../components/Screenshots.astro";
-import ClaudeStory from "../components/ClaudeStory.astro";
-import Footer from "../components/Footer.astro";
+import Features from "../components/Features.astro";
+import Inside from "../components/Inside.astro";
+import FAQ from "../components/FAQ.astro";
 ---
 <Base>
-  <Hero />
+  <Features roman="I" />
   <div class="scene-break" aria-hidden="true"></div>
-  <Yours roman="II" />
+  <Inside roman="II" />
   <div class="scene-break" aria-hidden="true"></div>
-  <Screenshots roman="III" />
-  <div class="scene-break" aria-hidden="true"></div>
-  <ClaudeStory roman="IV" />
-  <div class="scene-break" aria-hidden="true"></div>
-  <Footer roman="V" />
+  <FAQ roman="III" />
 </Base>
