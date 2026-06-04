@@ -1,8 +1,6 @@
 ---
-// Features — the marketing pitch: hero, value pillars, screenshots,
-// colophon, download CTA.
+// Features — value pillars, screenshots, colophon, download CTA.
 import Base from "../layouts/Base.astro";
-import Hero from "../components/Hero.astro";
 import Yours from "../components/Yours.astro";
 import Screenshots from "../components/Screenshots.astro";
 import ClaudeStory from "../components/ClaudeStory.astro";
@@ -10,15 +8,13 @@ import Footer from "../components/Footer.astro";
 ---
 <Base
   title="Features — JustWrite"
-  description="What JustWrite is, who it's for, and where you get it. Hero, value pillars, sketches from the app, colophon, downloads."
+  description="Local-first, BYO-AI, free and open. Sketches from the working app, colophon, and where to download it."
 >
-  <Hero />
+  <Yours roman="I" />
   <div class="scene-break" aria-hidden="true"></div>
-  <Yours roman="II" />
+  <Screenshots roman="II" />
   <div class="scene-break" aria-hidden="true"></div>
-  <Screenshots roman="III" />
+  <ClaudeStory roman="III" />
   <div class="scene-break" aria-hidden="true"></div>
-  <ClaudeStory roman="IV" />
-  <div class="scene-break" aria-hidden="true"></div>
-  <Footer roman="V" />
+  <Footer roman="IV" />
 </Base>

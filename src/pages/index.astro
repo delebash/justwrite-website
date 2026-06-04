@@ -1,14 +1,18 @@
 ---
-// Overview — the structured overview of what the instrument does.
+// Overview — the quiet-room hero up top, then the structured overview
+// (features grid + inside deep-dive + FAQ).
 import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
 import Features from "../components/Features.astro";
 import Inside from "../components/Inside.astro";
 import FAQ from "../components/FAQ.astro";
 ---
 <Base>
-  <Features roman="I" />
+  <Hero />
   <div class="scene-break" aria-hidden="true"></div>
-  <Inside roman="II" />
+  <Features roman="II" />
   <div class="scene-break" aria-hidden="true"></div>
-  <FAQ roman="III" />
+  <Inside roman="III" />
+  <div class="scene-break" aria-hidden="true"></div>
+  <FAQ roman="IV" />
 </Base>
