@@ -1,6 +1,35 @@
 ---
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const shot = (name) => `${base}/screenshots/${name}`;
+
+// Build-time lookup of the latest GitHub release. The bundled assets'
+// version-stamped filenames make a static URL impossible, so we fetch
+// the latest-release JSON at build time and embed the actual download
+// URLs. Rebuilds happen on every new release via repository_dispatch,
+// so these stay current.
+const RELEASES_PAGE = "https://github.com/delebash/justwrite-app/releases/latest";
+async function findDownloads() {
+  try {
+    const res = await fetch("https://api.github.com/repos/delebash/justwrite-app/releases/latest", {
+      headers: { Accept: "application/vnd.github+json" },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const find = (re) => json.assets?.find((a) => re.test(a.name))?.browser_download_url;
+    return {
+      windows: find(/-setup\.exe$/i),
+      mac:     find(/universal\.dmg$/i),
+      linux:   find(/\.AppImage$/i),
+      tag:     json.tag_name,
+    };
+  } catch {
+    return null;
+  }
+}
+const dl = (await findDownloads()) || {};
+const windowsHref = dl.windows || RELEASES_PAGE;
+const macHref     = dl.mac     || RELEASES_PAGE;
+const linuxHref   = dl.linux   || RELEASES_PAGE;
 ---
 <section class="hero" data-folio>
   <div class="container hero-container">
@@ -30,13 +59,51 @@ const shot = (name) => `${base}/screenshots/${name}`;
           <span>View on GitHub</span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>
-        <a class="btn btn--ghost" href="#download">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
-          </svg>
-          <span>Download for desktop</span>
-        </a>
+        <div class="download-group" data-download-group>
+          <a class="btn btn--ghost" data-platform="windows" href={windowsHref}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+            </svg>
+            <span class="dl-label">Windows</span>
+          </a>
+          <a class="btn btn--ghost" data-platform="mac" href={macHref}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+            </svg>
+            <span class="dl-label">macOS</span>
+          </a>
+          <a class="btn btn--ghost" data-platform="linux" href={linuxHref}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+            </svg>
+            <span class="dl-label">Linux</span>
+          </a>
+        </div>
       </div>
+
+      <script is:inline>
+        // Auto-detect the user's platform and emphasize the matching
+        // download button — hiding the other two. If detection fails
+        // (unknown UA, headless, etc.), all three stay visible.
+        (function () {
+          var ua = (navigator.userAgent || "").toLowerCase();
+          var p = null;
+          if (ua.indexOf("win") !== -1) p = "windows";
+          else if (ua.indexOf("mac") !== -1) p = "mac";
+          else if (ua.indexOf("linux") !== -1 && ua.indexOf("android") === -1) p = "linux";
+          if (!p) return;
+          var labels = { windows: "Windows", mac: "macOS", linux: "Linux" };
+          document.querySelectorAll("[data-download-group] [data-platform]").forEach(function (el) {
+            if (el.getAttribute("data-platform") === p) {
+              el.classList.remove("btn--ghost");
+              var lbl = el.querySelector(".dl-label");
+              if (lbl) lbl.textContent = "Download for " + labels[p];
+            } else {
+              el.hidden = true;
+            }
+          });
+        })();
+      </script>
 
       <ul class="hero-meta reveal reveal-6" aria-label="Built with">
         <li><span class="mono-tag">macOS</span></li>
@@ -142,6 +209,10 @@ const shot = (name) => `${base}/screenshots/${name}`;
     display: flex; flex-wrap: wrap; gap: 0.75rem;
     margin-bottom: 2.5rem;
   }
+  /* Three platform download buttons sit inline with the GitHub CTA.
+     `display: contents` lets them participate in .hero-ctas's flex
+     layout directly rather than forming a sub-group. */
+  .download-group { display: contents; }
 
   .hero-meta {
     display: flex; flex-wrap: wrap; align-items: center;
