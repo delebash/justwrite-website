@@ -29,6 +29,16 @@ const APP_REPO = "delebash/justwrite-app";
 const LOCAL_APP = resolve(ROOT, "..", "justwrite-app", "docs");
 const LAYOUT_PATH = "../../layouts/DocsLayout.astro";
 
+// Absolute base for rewritten intra-doc links. Must match `base` in
+// astro.config.mjs — relative `./slug` forms break under GitHub Pages'
+// trailing-slash canonicalization (./slug from /docs/foo/ → /docs/foo/slug).
+async function readDocsBase() {
+  const conf = await readFile(resolve(ROOT, "astro.config.mjs"), "utf8");
+  const m = conf.match(/base:\s*['"]([^'"]+)['"]/);
+  const base = (m ? m[1] : "").replace(/\/$/, "");
+  return `${base}/docs`;
+}
+
 function arg(name, hasValue = false) {
   const i = process.argv.indexOf(name);
   if (i < 0) return hasValue ? null : false;
@@ -57,24 +67,27 @@ function escapeYaml(s) {
   return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function rewriteLinks(markdown) {
-  // [text](foo.md)         → [text](./foo)
-  // [text](foo.md#anchor)  → [text](./foo#anchor)
-  // [text](README.md)      → [text](./)
+function rewriteLinks(markdown, docsBase) {
+  // [text](foo.md)         → [text](<base>/docs/foo/)
+  // [text](foo.md#anchor)  → [text](<base>/docs/foo/#anchor)
+  // [text](README.md)      → [text](<base>/docs/)
+  // Absolute paths so the link resolves the same from /docs/ (the index)
+  // and from /docs/<slug>/ (every other page) — relative forms only work
+  // from one or the other given GitHub Pages adds trailing slashes.
   return markdown.replace(/\]\(([^)\s]+?)\.md(#[^)]*)?\)/g, (_, file, anchor = "") => {
     const slug = basename(file) === "README" ? "" : basename(file);
-    return `](./${slug}${anchor})`;
+    return `](${docsBase}/${slug ? slug + "/" : ""}${anchor})`;
   });
 }
 
-async function processFile(srcPath) {
+async function processFile(srcPath, docsBase) {
   const fileName = basename(srcPath);
   const slug = fileName === "README.md" ? "index" : fileName.replace(/\.md$/, "");
   const raw = await readFile(srcPath, "utf8");
   const title = titleOf(raw, slug);
   // Strip the leading H1 — the layout's title bar renders it instead.
   const stripped = raw.replace(/^#\s+.+\n+/, "");
-  const rewritten = rewriteLinks(stripped);
+  const rewritten = rewriteLinks(stripped, docsBase);
 
   const frontmatter =
     `---\n` +
@@ -104,8 +117,9 @@ async function syncFromDir(dir) {
   await rm(TARGET, { recursive: true, force: true });
   await mkdir(TARGET, { recursive: true });
 
+  const docsBase = await readDocsBase();
   const slugs = [];
-  for (const f of files) slugs.push(await processFile(join(dir, f)));
+  for (const f of files) slugs.push(await processFile(join(dir, f), docsBase));
   await syncToc(dir);
   return slugs;
 }
