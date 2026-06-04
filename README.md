@@ -39,12 +39,6 @@ Output lands in `dist/`.
 4. Push to `main` (or `master`) — the workflow in
    `.github/workflows/deploy.yml` will build and publish.
 
-## Replacing the screenshot placeholders
-
-Drop PNGs into `public/screenshots/` (e.g. `01-home.png`, `02-manuscript.png`)
-and update the `shots` array in `src/components/Screenshots.astro` to
-swap each `<div class="shot-placeholder">` for an `<img>` tag.
-
 ## Structure
 
 ```
@@ -54,11 +48,10 @@ src/
 ├─ layouts/
 │  └─ Base.astro            # html shell, fonts, running head, folio, theme toggle
 ├─ components/
-│  ├─ Hero.astro            # section I  — title + CTAs + mockup
-│  ├─ Features.astro        # section II — six rooms grid
+│  ├─ Hero.astro            # section I   — title + CTAs + mockup
+│  ├─ Features.astro        # section II  — six rooms grid
 │  ├─ ClaudeStory.astro     # section III — colophon
-│  ├─ Screenshots.astro     # section IV — sketches gallery
-│  ├─ Footer.astro          # section V  — CTA + page footer
+│  ├─ Footer.astro          # section IV  — CTA + page footer
 │  └─ AppMockup.astro       # HTML/CSS mockup of the app, for the hero
 └─ styles/
    └─ global.css            # design tokens + chrome
