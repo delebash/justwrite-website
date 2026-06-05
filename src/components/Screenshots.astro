@@ -15,19 +15,67 @@ const shots = [
     span: "wide",
   },
   {
-    file: "analysis.png",
-    label: "Analysis",
-    title: "A reading of the work.",
-    caption: "KPIs at the top, then a 30-day pace chart, a status donut, narrative strands ranked by word count. Honest numbers, no congratulations.",
-    alt: "JustWrite Analysis — KPIs, pace, status donut, strands by word count",
+    file: "editor.png",
+    label: "Manuscript",
+    title: "A typesetter's page, with scene cards.",
+    caption: "Edit the prose, or step back to the chapter's scene cards. A quiet serif page in the middle, the manuscript spine on the left, AI tools — critique, multi-reader panel, line edits, versions — across the top.",
+    alt: "JustWrite manuscript editor — Card view of a chapter with four scenes",
+    span: "wide",
+  },
+  {
+    file: "characters.png",
+    label: "Characters",
+    title: "Wants, needs, and the lie they tell.",
+    caption: "Each character has wants, needs, the lie they tell themselves, the truth they deny — and a three-act arc. A consistency audit flags contradictions across chapters; a relationship-arc tracker maps how each bond evolves.",
+    alt: "JustWrite Characters — protagonist detail with motivation grid and three-act arc",
+    span: "wide",
+  },
+  {
+    file: "worldbuilding.png",
+    label: "Worldbuilding",
+    title: "A wiki for the world around the book.",
+    caption: "Free-form articles organised by category — Geography, History, Cultures, Languages, Factions, Lore & myth. Tag them; cross-reference them; search them.",
+    alt: "JustWrite Worldbuilding — category filters and articles for the novel's world",
+    span: "wide",
+  },
+  {
+    file: "relations.png",
+    label: "Relations",
+    title: "Everyone and everything, in one graph.",
+    caption: "Characters, locations, objects, narrative strands. Edges drawn from shared scenes, shared groups, shared mentions. You don't draw them here; they appear automatically from the work you do everywhere else.",
+    alt: "JustWrite Relations — force-directed graph of every story-world entity",
     span: "wide",
   },
   {
     file: "plotboard.png",
     label: "Plot board",
     title: "Strands across chapters.",
-    caption: "Each narrative strand reads as a row; each chapter a column. Drop a beat on the grid and it links back to its scenes. Templates included — Hero's Journey, three-act — or build one from scratch.",
+    caption: "Each narrative strand reads as a row; each chapter a column. Drop a beat on the grid and it links back to its scenes. Templates included — Three-Act, Save the Cat, Hero's Journey, Story Circle — or build one from scratch.",
     alt: "JustWrite Plot board — five narrative strands across thirteen chapters",
+    span: "wide",
+  },
+  {
+    file: "timeline.png",
+    label: "Timeline",
+    title: "The story's chronology, laid flat.",
+    caption: "Every event you attach to a character, location, object, group, or the setting — sorted by in-story date. Click an event to jump to its source; the order reads cleanly even when the chapters don't.",
+    alt: "JustWrite Timeline — chronological event list with dates and entity tags",
+    span: "wide",
+  },
+  {
+    file: "analysis.png",
+    label: "Analysis",
+    title: "A reading of the work.",
+    caption: "KPIs and a 30-day pace chart up top, then a 53-week heatmap, milestones, status breakdown, narrative strands by word count — and AI surfaces below for story-tension, voice-drift, reverse outline, and plot-hole audit.",
+    alt: "JustWrite Analysis — KPIs, pace chart, writing heatmap, milestones, status, strands",
+    span: "wide",
+  },
+  {
+    file: "writer-lab.png",
+    label: "Writer Lab",
+    title: "Look inside the AI calls.",
+    caption: "Every AI feature, broken open: rewrite, expand, tighten, sensory weave, sentence variety, prose tightening, critique notes, structural analysis. Useful when you want to know what the model is actually being asked — or when you're tuning a local model.",
+    alt: "JustWrite Writer Lab — grid of AI experiment cards across prose passes and analysis",
     span: "wide",
   },
   {
@@ -39,35 +87,19 @@ const shots = [
     span: "wide",
   },
   {
-    file: "characters.png",
-    label: "Characters",
-    title: "Traits, arcs, and the lie they tell.",
-    caption: "Each character has wants, needs, the lie they tell themselves, the truth they deny — and a three-act arc (Beginning · Midpoint · End). Add an image; the AI sees it in context.",
-    alt: "JustWrite Characters — protagonist detail with traits and three-act arc",
-    span: "wide",
-  },
-  {
-    file: "worldbuilding.png",
-    label: "Worldbuilding",
-    title: "A wiki for the world around the book.",
-    caption: "Free-form articles organised by category — Geography, History, Cultures, Languages, Factions, Lore & myth. Tag them; cross-reference them; search them.",
-    alt: "JustWrite Worldbuilding — categories with articles for the novel's world",
-    span: "wide",
-  },
-  {
     file: "settings-ai.png",
     label: "Settings · AI",
     title: "Bring your own. Plural.",
-    caption: "Five providers configured: Ollama and LM Studio running locally, OpenAI in the cloud, an OpenAI-compatible TTS server, and the OS's Web Speech voices. Pick a different model per task.",
-    alt: "JustWrite Settings — AI providers list with five configured endpoints",
+    caption: "Set defaults — LLM, TTS, embedding — then override per feature. Manuscript chat, critique, entity extraction, writer access, name suggest — every AI surface can be pinned to a different provider and model.",
+    alt: "JustWrite Settings — AI defaults and per-feature routing matrix",
     span: "wide",
   },
   {
-    file: "settings-dark.png",
+    file: "settings-appearance.png",
     label: "Settings · Appearance",
     title: "Theme presets, or tune your own.",
-    caption: "Studio, Fine Press, Ivory Press, Calm Modern, Editorial. Light, dark, or follow the system. Save your mix as a preset.",
-    alt: "JustWrite Settings — Appearance theme presets, dark mode",
+    caption: "Studio, Fine Press, Ivory Press, Calm Modern, Editorial. A live preview pane shows your settings against a real page. Light, dark, or follow the system. Save your mix as a preset.",
+    alt: "JustWrite Settings — Appearance theme presets with live preview pane",
     span: "wide",
   },
 ];
@@ -87,7 +119,7 @@ const shots = [
       {shots.map((s, i) => (
         <figure class={`shot shot--${s.span}`} style={`--i:${i}`}>
           <div class="shot-frame">
-            <img src={shot(s.file)} alt={s.alt} loading="lazy" decoding="async" />
+            <img src={shot(s.file)} alt={s.alt} loading="lazy" decoding="async" data-zoomable />
           </div>
           <figcaption>
             <span class="cap-label">{s.label}</span>
