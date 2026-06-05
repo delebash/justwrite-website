@@ -17,6 +17,19 @@ const isActive = (s) => slug === (s || "index");
   <section class="docs-page">
     <div class="docs-shell">
       <aside class="docs-toc" aria-label="Documentation table of contents">
+        <div class="docs-search" role="search">
+          <input
+            type="search"
+            id="docs-search-input"
+            class="docs-search-input"
+            placeholder="Search docs…"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search documentation"
+          />
+          <div id="docs-search-results" class="docs-search-results" hidden></div>
+        </div>
+
         <a class={`toc-item toc-index${isActive("index") ? " active" : ""}`} href={docHref("")}>
           <span class="toc-title">Overview</span>
           <span class="toc-hint">What JustWrite is, where to start</span>
@@ -40,12 +53,65 @@ const isActive = (s) => slug === (s || "index");
           <p class="eyebrow"><span>JustWrite Docs</span></p>
           <h1 class="docs-title">{title}</h1>
         </header>
-        <article class="docs-prose">
+        <article class="docs-prose" data-pagefind-body>
           <slot />
         </article>
       </main>
     </div>
   </section>
+
+  <script define:vars={{ pagefindUrl: `${base}/pagefind/pagefind.js` }}>
+    const input = document.getElementById("docs-search-input");
+    const out = document.getElementById("docs-search-results");
+    if (input && out) {
+      let pagefind = null;
+      let loadFailed = false;
+      async function getPagefind() {
+        if (pagefind || loadFailed) return pagefind;
+        try {
+          pagefind = await import(/* @vite-ignore */ pagefindUrl);
+          if (pagefind.options) await pagefind.options({ excerptLength: 28 });
+        } catch (e) {
+          loadFailed = true;
+        }
+        return pagefind;
+      }
+      const escape = (s) => String(s).replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+      let t;
+      input.addEventListener("input", () => {
+        clearTimeout(t);
+        const q = input.value.trim();
+        if (!q) { out.hidden = true; out.innerHTML = ""; return; }
+        t = setTimeout(async () => {
+          const pf = await getPagefind();
+          if (!pf) {
+            out.hidden = false;
+            out.innerHTML = '<div class="docs-search-note">Search index is built on <code>npm run build</code>; not available in <code>dev</code>.</div>';
+            return;
+          }
+          const r = await pf.search(q);
+          if (!r.results.length) {
+            out.hidden = false;
+            out.innerHTML = '<div class="docs-search-note">No matches.</div>';
+            return;
+          }
+          const top = r.results.slice(0, 8);
+          const data = await Promise.all(top.map(x => x.data()));
+          out.hidden = false;
+          out.innerHTML = data.map(d => {
+            const title = escape(d.meta?.title || d.url);
+            const excerpt = d.excerpt || "";
+            return `<a class="docs-search-result" href="${escape(d.url)}"><span class="r-title">${title}</span><span class="r-excerpt">${excerpt}</span></a>`;
+          }).join("");
+        }, 150);
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") { input.value = ""; out.hidden = true; out.innerHTML = ""; input.blur(); }
+      });
+    }
+  </script>
 </Base>
 
 <style>
@@ -70,6 +136,75 @@ const isActive = (s) => slug === (s || "index");
     overflow-y: auto;
     padding-right: 0.5rem;
   }
+  .docs-search { margin-bottom: 1rem; position: relative; }
+  .docs-search-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.55rem 0.7rem;
+    font-family: var(--font-sans, system-ui);
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--paper, transparent);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 120ms ease, background 120ms ease;
+  }
+  .docs-search-input::placeholder { color: var(--muted); }
+  .docs-search-input:focus {
+    border-color: color-mix(in oklab, var(--accent) 60%, transparent);
+    background: color-mix(in oklab, var(--accent) 4%, transparent);
+  }
+  .docs-search-results {
+    margin-top: 0.5rem;
+    padding: 0.3rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: color-mix(in oklab, var(--ink) 3%, transparent);
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .docs-search-result {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0.55rem;
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: background 120ms ease, color 120ms ease;
+  }
+  .docs-search-result:hover {
+    background: color-mix(in oklab, var(--accent) 10%, transparent);
+    color: var(--ink);
+  }
+  .docs-search-result .r-title { font-size: 0.9rem; font-weight: 500; }
+  .docs-search-result .r-excerpt {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.45;
+    margin-top: 0.15rem;
+  }
+  .docs-search-result :global(mark) {
+    background: color-mix(in oklab, var(--accent) 25%, transparent);
+    color: var(--ink);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  .docs-search-note {
+    padding: 0.55rem 0.6rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .docs-search-note :global(code) {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.82em;
+  }
+
   .toc-group { margin-top: 1.4rem; }
   .toc-section {
     font-family: var(--font-mono);

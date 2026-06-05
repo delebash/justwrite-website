@@ -8,7 +8,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "prebuild": "node scripts/sync-docs.mjs --from release --silent-if-missing",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
     "sync-docs:local": "node scripts/sync-docs.mjs --from local",
@@ -18,6 +18,7 @@
     "astro": "^6.4.3"
   },
   "devDependencies": {
+    "pagefind": "^1.5.2",
     "playwright": "^1.60.0"
   }
 }

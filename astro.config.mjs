@@ -9,5 +9,6 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'auto'
   },
-  compressHTML: true
+  compressHTML: true,
+  devToolbar: { enabled: false }
 });
