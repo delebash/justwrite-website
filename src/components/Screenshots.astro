@@ -1,7 +1,11 @@
 ---
 const { roman = "VI" } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const shot = (name) => `${base}/screenshots/${name}`;
+// Build-time cache-buster. Astro frontmatter runs once per build, so every
+// deploy gets a fresh ?v=… that forces browsers to re-fetch the PNGs even
+// when their filenames haven't changed.
+const v = Date.now();
+const shot = (name) => `${base}/screenshots/${name}?v=${v}`;
 
 // Real screenshots from the app. Add more files to /public/screenshots/
 // and append to this array.

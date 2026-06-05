@@ -1,6 +1,8 @@
 ---
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const shot = (name) => `${base}/screenshots/${name}`;
+// Build-time cache-buster — see Screenshots.astro for the rationale.
+const v = Date.now();
+const shot = (name) => `${base}/screenshots/${name}?v=${v}`;
 
 // Build-time lookup of the latest GitHub release. The bundled assets'
 // version-stamped filenames make a static URL impossible, so we fetch
