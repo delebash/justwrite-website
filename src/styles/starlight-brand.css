@@ -1,0 +1,68 @@
+/* Carries the marketing site's brand into Starlight's docs pages so /docs
+   doesn't read as a different product. Values mirror src/styles/global.css —
+   if a token changes there, change it here too. Starlight owns layout; this
+   file only re-points its colour and type variables. */
+
+:root {
+  /* Type — same three families the rest of the site loads from Google Fonts
+     in Base.astro. Starlight pages get them via the same <link> only if the
+     font is already cached, so the stacks fall back gracefully. */
+  --sl-font: "Spline Sans", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --sl-font-mono: "Spline Sans Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* Light theme — the site's warm paper palette. */
+:root[data-theme="light"] {
+  --sl-color-accent-low: oklch(0.92 0.028 14);
+  --sl-color-accent: oklch(0.46 0.105 14);
+  --sl-color-accent-high: oklch(0.40 0.092 14);
+
+  --sl-color-white: oklch(0.22 0.008 85);      /* Starlight uses "white" as the
+                                                  highest-contrast text colour;
+                                                  in light mode that is our ink. */
+  --sl-color-gray-1: oklch(0.30 0.008 85);
+  --sl-color-gray-2: oklch(0.38 0.008 85);
+  --sl-color-gray-3: oklch(0.55 0.008 85);
+  --sl-color-gray-4: oklch(0.72 0.006 85);
+  --sl-color-gray-5: oklch(0.91 0.005 85);
+  --sl-color-gray-6: oklch(0.975 0.004 85);
+  --sl-color-gray-7: oklch(0.985 0.004 85);
+  --sl-color-black: oklch(0.985 0.004 85);     /* …and "black" is the page bg. */
+  --sl-color-bg: oklch(0.985 0.004 85);
+  --sl-color-bg-nav: oklch(1 0 0);
+  --sl-color-bg-sidebar: oklch(0.975 0.004 85);
+  --sl-color-hairline: oklch(0.91 0.005 85);
+  --sl-color-hairline-light: oklch(0.94 0.004 85);
+  --sl-color-text-accent: oklch(0.40 0.092 14);
+}
+
+/* Dark theme — the site's cool ink palette. Accent values are global.css's
+   dark --accent-soft / --accent / --accent-ink, in Starlight's low→high order:
+   `low` backs the selected sidebar row, `high` is accented text. */
+:root[data-theme="dark"] {
+  --sl-color-accent-low: oklch(0.30 0.045 14);
+  --sl-color-accent: oklch(0.72 0.13 14);
+  --sl-color-accent-high: oklch(0.85 0.10 14);
+  --sl-color-text-accent: oklch(0.85 0.10 14);
+
+  --sl-color-white: oklch(0.94 0.005 85);
+  --sl-color-gray-1: oklch(0.90 0.005 85);
+  --sl-color-gray-2: oklch(0.78 0.006 85);
+  --sl-color-gray-3: oklch(0.62 0.007 85);
+  --sl-color-gray-4: oklch(0.48 0.006 85);
+  --sl-color-gray-5: oklch(0.31 0.007 250);
+  --sl-color-gray-6: oklch(0.21 0.005 250);
+  --sl-color-black: oklch(0.16 0.005 250);
+
+  --sl-color-bg: oklch(0.16 0.005 250);
+  --sl-color-bg-nav: oklch(0.21 0.005 250);
+  --sl-color-bg-sidebar: oklch(0.185 0.005 250);
+  --sl-color-hairline: oklch(0.31 0.007 250);
+  --sl-color-hairline-light: oklch(0.27 0.005 250);
+}
+
+/* The docs prose measure — the marketing site sets 72ch and the docs read
+   better at the same width than at Starlight's wider default. */
+.sl-markdown-content {
+  max-width: var(--measure, 72ch);
+}

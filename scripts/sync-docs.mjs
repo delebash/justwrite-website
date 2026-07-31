@@ -13,8 +13,10 @@
 //     This is the CI mode — the marketing site serves the latest
 //     RELEASED docs, not the app's master branch.
 //
-// Generated pages land in src/pages/docs/ which is gitignored. Each
-// .md gets prepended Astro frontmatter (layout + title) and intra-doc
+// Generated pages land in src/content/docs/docs/ which is gitignored —
+// Starlight's `docs` content collection, nested one level so the pages
+// serve at /docs/ and the marketing site keeps the root. Each .md gets
+// prepended Starlight frontmatter (title + description) and intra-doc
 // `(foo.md)` links are rewritten to Astro routes.
 
 import { readFile, writeFile, mkdir, rm, readdir, cp, stat } from "node:fs/promises";
@@ -23,11 +25,10 @@ import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const TARGET = resolve(ROOT, "src/pages/docs");
+const TARGET = resolve(ROOT, "src/content/docs/docs");
 const TOC_TARGET = resolve(ROOT, "src/data/docs-toc.json");
 const APP_REPO = "delebash/justwrite-app";
 const LOCAL_APP = resolve(ROOT, "..", "justwrite-app", "docs");
-const LAYOUT_PATH = "../../layouts/DocsLayout.astro";
 
 // Absolute base for rewritten intra-doc links. Must match `base` in
 // astro.config.mjs — relative `./slug` forms break under GitHub Pages'
@@ -80,20 +81,27 @@ function rewriteLinks(markdown, docsBase) {
   });
 }
 
-async function processFile(srcPath, docsBase) {
+async function processFile(srcPath, docsBase, hints) {
   const fileName = basename(srcPath);
   const slug = fileName === "README.md" ? "index" : fileName.replace(/\.md$/, "");
   const raw = await readFile(srcPath, "utf8");
   const title = titleOf(raw, slug);
-  // Strip the leading H1 — the layout's title bar renders it instead.
-  const stripped = raw.replace(/^#\s+.+\n+/, "");
+  // Strip the leading H1 — Starlight renders the frontmatter title instead.
+  // `[^\r\n]*` rather than `.+`: JS treats \r as a line terminator, so `.`
+  // will not cross it, and a CRLF checkout (git core.autocrlf on Windows)
+  // silently left the H1 in place — every page rendered its title twice.
+  const stripped = raw.replace(/^#\s+[^\r\n]*\r?\n+/, "");
   const rewritten = rewriteLinks(stripped, docsBase);
 
+  // The TOC hint becomes the page description: Starlight puts it in the
+  // <meta> tags and Pagefind uses it in search results. The old bespoke
+  // sidebar showed hints inline; Starlight's does not, so this is where
+  // that copy now lives rather than being dropped.
+  const hint = hints.get(slug);
   const frontmatter =
     `---\n` +
-    `layout: ${LAYOUT_PATH}\n` +
     `title: "${escapeYaml(title)}"\n` +
-    `slug: "${slug}"\n` +
+    (hint ? `description: "${escapeYaml(hint)}"\n` : "") +
     `---\n\n`;
 
   const dest = join(TARGET, `${slug}.md`);
@@ -101,6 +109,8 @@ async function processFile(srcPath, docsBase) {
   return slug;
 }
 
+// Copies toc.json across and returns slug → hint, which processFile turns
+// into each page's `description`.
 async function syncToc(dir) {
   const src = join(dir, "toc.json");
   if (!(await exists(src))) {
@@ -108,19 +118,28 @@ async function syncToc(dir) {
   }
   await mkdir(dirname(TOC_TARGET), { recursive: true });
   await cp(src, TOC_TARGET);
+
+  const toc = JSON.parse(await readFile(src, "utf8"));
+  const hints = new Map();
+  for (const group of toc) {
+    for (const item of group.items) if (item.hint) hints.set(item.slug, item.hint);
+  }
+  return hints;
 }
 
 async function syncFromDir(dir) {
   const files = (await readdir(dir)).filter((f) => f.endsWith(".md"));
   if (files.length === 0) throw new Error(`No .md files found in ${dir}`);
 
+  // TOC first — processFile needs the hints for each page's description.
+  const hints = await syncToc(dir);
+
   await rm(TARGET, { recursive: true, force: true });
   await mkdir(TARGET, { recursive: true });
 
   const docsBase = await readDocsBase();
   const slugs = [];
-  for (const f of files) slugs.push(await processFile(join(dir, f), docsBase));
-  await syncToc(dir);
+  for (const f of files) slugs.push(await processFile(join(dir, f), docsBase, hints));
   return slugs;
 }
 
@@ -184,7 +203,7 @@ async function fromRelease() {
 try {
   const slugs = FROM === "local" ? await fromLocal() : await fromRelease();
   if (slugs.length) {
-    console.log(`sync-docs: wrote ${slugs.length} pages to src/pages/docs/`);
+    console.log(`sync-docs: wrote ${slugs.length} pages to src/content/docs/docs/`);
     console.log(`  ${slugs.join(", ")}`);
   }
 } catch (err) {
