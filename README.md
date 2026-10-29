@@ -31,7 +31,7 @@ Output lands in `dist/`.
 
 1. Push to a new GitHub repo.
 2. In **Settings → Pages**, set **Source** to *GitHub Actions*.
-3. Edit `astro.config.mjs` — set `site` to your repo URL.
+3. Edit `astro.config.js` — set `site` to your repo URL.
    - If deploying at `https://<user>.github.io/<repo>/`, uncomment `base`
      and set it to `'/<repo>'`.
    - If using a custom domain, leave `base` commented out and add a

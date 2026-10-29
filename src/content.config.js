@@ -1,5 +1,5 @@
 // Starlight's `docs` content collection. The pages themselves are generated
-// into src/content/docs/docs/ by scripts/sync-docs.mjs (gitignored) — this file
+// into src/content/docs/docs/ by scripts/sync-docs.js (gitignored) — this file
 // only declares the collection so Astro's Content Layer can load them.
 import { defineCollection } from "astro:content";
 import { docsLoader } from "@astrojs/starlight/loaders";

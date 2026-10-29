@@ -1,9 +1,12 @@
+# SPDX-License-Identifier: MIT
+# A family app's website: built with the docs of the app's latest release and published on GitHub Pages. The kit's
+# (just-core/website/.github/workflows/deploy.yml) — every site copies it as it is (the family guard checks).
+# Nothing builds by itself (the user, 2026-10-28: "i dont ever want an automatic build of anything i only want stuff
+# to build when i say so"; "other github workflows shouldnt be running other workflows"): it starts only by hand —
+# the site's `npm run deploy` (scripts/deploy.js) or the Actions page's "Run workflow". From justwrite-website's
+# deploy.yml (MIT — the kit's NOTICE.md), without its push and repository_dispatch triggers.
 name: Deploy to GitHub Pages
 
-# Only when asked: `npm run deploy` here (gh workflow run deploy.yml) or the Actions page's "Run
-# workflow" — never on a push, a schedule or another repository's workflow (the user, 2026-10-28: "i only
-# want stuff to build when i say so"; "other github workflows shouldnt be running other workflows"). The
-# prebuild step (package.json) takes the latest justwrite-app release's docs.tar.gz.
 on:
   workflow_dispatch:
 
@@ -18,7 +21,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,6 +35,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # prebuild: scripts/sync-docs.js --from release — the docs of the app's latest release
       - name: Build site
         run: npm run build
 
@@ -45,7 +49,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

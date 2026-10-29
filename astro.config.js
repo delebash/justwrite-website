@@ -7,7 +7,7 @@ import starlight from '@astrojs/starlight';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
 // The docs sidebar is built from justwrite-app's docs/toc.json — the same file
-// that drives the in-app Help viewer. scripts/sync-docs.mjs copies it here on
+// that drives the in-app Help viewer. scripts/sync-docs.js copies it here on
 // predev/prebuild. It is gitignored and may be absent (fresh clone with no
 // sibling repo and no release yet), so fall back to autogenerating the sidebar
 // from whatever pages exist rather than failing the whole site build.

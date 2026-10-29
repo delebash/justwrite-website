@@ -2,7 +2,7 @@
 dist/
 .astro/
 
-# generated docs pulled from justwrite-app releases by scripts/sync-docs.mjs
+# generated docs pulled from justwrite-app releases by scripts/sync-docs.js
 # (Starlight's docs collection — nested one level so they serve at /docs/)
 src/content/docs/docs/
 src/data/docs-toc.json
