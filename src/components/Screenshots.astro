@@ -6,25 +6,33 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 // when their filenames haven't changed.
 const v = Date.now();
 const shot = (name) => `${base}/screenshots/${name}?v=${v}`;
-const asset = (name) => `${base}/screenshots/${name}?v=${v}`;
 
-// Real screenshots from the app. Add more files to /public/screenshots/
-// and append to this array.
+// Real screenshots from the app — justwrite-app's e2e/capture-direct.js takes them on the sample
+// book, the AI ones with a real local model. Add more files to /public/screenshots/ and append to
+// this array.
 const shots = [
   {
     file: "home-light.png",
     label: "Home",
     title: "A daily ledger of the work.",
-    caption: "Word goal, deadline, the day's session, fortnight, cadence — and a button that drops you back into the chapter you were last in.",
+    caption: "Word goal, deadline, the day's session, fortnight, cadence — and a card that drops you back into the chapter you were last in.",
     alt: "JustWrite Home — project goal, today's session, fortnight, cadence",
     span: "wide",
   },
   {
     file: "editor.png",
     label: "Manuscript",
-    title: "A typesetter's page, with scene cards.",
-    caption: "Edit the prose, or step back to the chapter's scene cards. A quiet serif page in the middle, the manuscript spine on the left, AI tools — critique, multi-reader panel, line edits, versions — across the top.",
-    alt: "JustWrite manuscript editor — Card view of a chapter with four scenes",
+    title: "A typesetter's page.",
+    caption: "Write a scene on a quiet serif page, with the manuscript spine on the left. Step back to the chapter's scene cards, read it straight through, or open versions, critique and the multi-reader panel from the chapter.",
+    alt: "JustWrite manuscript editor — a scene of the sample novel on a serif page",
+    span: "wide",
+  },
+  {
+    file: "scene-draft.png",
+    label: "Draft from plan",
+    title: "A scene from its summary.",
+    caption: "Switch on AI scene drafting for a book, give a scene its summary, and Draft from plan writes it from that and the story around it. The AI's words stay marked in violet until you make them yours.",
+    alt: "JustWrite — a scene drafted from its summary, the AI-written words in violet",
     span: "wide",
   },
   {
@@ -32,38 +40,62 @@ const shots = [
     label: "Characters",
     title: "Wants, needs, and the lie they tell.",
     caption: "Each character has wants, needs, the lie they tell themselves, the truth they deny — and a three-act arc. A consistency audit flags contradictions across chapters; a relationship-arc tracker maps how each bond evolves.",
-    alt: "JustWrite Characters — protagonist detail with motivation grid and three-act arc",
+    alt: "JustWrite Characters — protagonist detail with role, one-liner and three-act arc",
+    span: "wide",
+  },
+  {
+    file: "name-ideas.png",
+    label: "Name ideas",
+    title: "Brainstorm where you name things.",
+    caption: "Name ideas sits beside every name, Title ideas beside every title. Give it a seed — or none, and the page and the book steer — then Use puts the pick in place.",
+    alt: "JustWrite — Name ideas beside a character's name, a seed prompt and a list of names",
+    span: "wide",
+  },
+  {
+    file: "talk-to-character.png",
+    label: "Talk to a character",
+    title: "Interview your cast.",
+    caption: "Ask anyone in your story a question and they answer in the voice their sheet gives them, with the scenes behind it cited. Save to sheet puts what you learn back on their page.",
+    alt: "JustWrite — a conversation with the protagonist, with cited scenes and Save to sheet",
     span: "wide",
   },
   {
     file: "worldbuilding.png",
     label: "Worldbuilding",
     title: "A wiki for the world around the book.",
-    caption: "Free-form articles organised by category — Geography, History, Cultures, Languages, Factions, Lore & myth. Tag them; cross-reference them; search them.",
+    caption: "Free-form articles organised by category — Geography, History, Cultures, Languages, Factions, Magic & lore. Tag them; cross-reference them; search them.",
     alt: "JustWrite Worldbuilding — category filters and articles for the novel's world",
+    span: "wide",
+  },
+  {
+    file: "sheet-draft.png",
+    label: "Draft with AI",
+    title: "A sheet from a sentence.",
+    caption: "Describe a place, an object or a group in a line, and the AI drafts its sheet from your words and the book. Tick the fields you want, edit them inline, then apply — fields you've already written stay yours.",
+    alt: "JustWrite — a location's sheet drafted from a one-line description, fields to tick and apply",
     span: "wide",
   },
   {
     file: "relations.png",
     label: "Relations",
     title: "Everyone and everything, in one graph.",
-    caption: "Characters, locations, objects, narrative strands. Edges drawn from shared scenes, shared groups, shared mentions. You don't draw them here; they appear automatically from the work you do everywhere else.",
-    alt: "JustWrite Relations — force-directed graph of every story-world entity",
+    caption: "Characters, locations and objects. The lines come from shared scenes, shared groups and shared strands — you don't draw them here; they appear from the work you do everywhere else.",
+    alt: "JustWrite Relations — a graph of the story's characters, places and objects",
     span: "wide",
   },
   {
     file: "plotboard.png",
     label: "Plot board",
     title: "Strands across chapters.",
-    caption: "Each narrative strand reads as a row; each chapter a column. Drop a beat on the grid and it links back to its scenes. Templates included — Three-Act, Save the Cat, Hero's Journey, Story Circle — or build one from scratch.",
-    alt: "JustWrite Plot board — five narrative strands across thirteen chapters",
+    caption: "Each narrative strand reads as a row; each chapter a column. Drop a beat on the grid and it links back to its scenes. Templates included — Three-Act, Save the Cat, Hero's Journey, Story Circle — and a strand can suggest its own next beats.",
+    alt: "JustWrite Plot board — narrative strands across chapters, with their beats",
     span: "wide",
   },
   {
     file: "timeline.png",
     label: "Timeline",
     title: "The story's chronology, laid flat.",
-    caption: "Every event you attach to a character, location, object, group, or the setting — sorted by in-story date. Click an event to jump to its source; the order reads cleanly even when the chapters don't.",
+    caption: "Every event you attach to a character, location, object, group, or the setting — sorted by in-story date. Click an event to edit it; the order reads cleanly even when the chapters don't.",
     alt: "JustWrite Timeline — chronological event list with dates and entity tags",
     span: "wide",
   },
@@ -71,41 +103,24 @@ const shots = [
     file: "analysis.png",
     label: "Analysis",
     title: "A reading of the work.",
-    caption: "KPIs and a 30-day pace chart up top, then a 53-week heatmap, milestones, status breakdown, narrative strands by word count — and AI surfaces below for story-tension, voice-drift, reverse outline, and plot-hole audit.",
-    alt: "JustWrite Analysis — KPIs, pace chart, writing heatmap, milestones, status, strands",
+    caption: "KPIs and a 30-day pace chart up top, then a 53-week heatmap, milestones, status breakdown, narrative strands by word count, words per chapter — and AI readings below for story tension, voice drift, a reverse outline, and plot holes.",
+    alt: "JustWrite Analysis — status, strands by word count, words per chapter",
     span: "wide",
   },
   {
     file: "writer-lab.png",
-    label: "Writer Lab",
+    label: "The Lab",
     title: "Look inside the AI calls.",
-    caption: "Every AI feature, broken open: rewrite, expand, tighten, sensory weave, sentence variety, prose tightening, critique notes, structural analysis. Useful when you want to know what the model is actually being asked — or when you're tuning a local model.",
-    alt: "JustWrite Writer Lab — grid of AI experiment cards across prose passes and analysis",
-    span: "wide",
-  },
-  {
-    file: "studio.png",
-    label: "Audio Studio · Cast",
-    title: "A voice for everyone in the book.",
-    caption: "Assign each character — and the narrator — to a voice from any TTS provider you've added. Smart-cast suggests pairings; render the chapter into an .m4b when you're ready.",
-    alt: "JustWrite Audio Studio — Cast & voices, characters with voice pickers, voice library",
-    span: "wide",
-  },
-  {
-    file: "studio-script.png",
-    label: "Audio Studio · Script",
-    title: "Speakers, attributed line-by-line.",
-    caption: "Run a chapter through the analyzer and every paragraph is tagged with its speaker — narrator or character — and a confidence score. Hand-correct what you want; the rest goes straight to render.",
-    alt: "JustWrite Audio Studio — Script tab for Chapter 2 with line-by-line speaker attribution",
-    audio: { file: "Ch2-An inventory in two hands.wav", label: "Ch. 2 — An inventory in two hands · rendered" },
+    caption: "Every AI feature, opened up: the prompt it sends, the preset it runs on, and a test input to try it against. Run settings side by side and save the one you like as a preset — useful when you're tuning a local model.",
+    alt: "JustWrite AI Settings — Routing by feature, a feature's prompt, test input and preset columns",
     span: "wide",
   },
   {
     file: "settings-ai.png",
-    label: "Settings · AI",
+    label: "AI Settings",
     title: "Bring your own. Plural.",
-    caption: "Set defaults — LLM, TTS, embedding — then override per feature. Manuscript chat, critique, entity extraction, writer access, name suggest — every AI surface can be pinned to a different provider and model.",
-    alt: "JustWrite Settings — AI defaults and per-feature routing matrix",
+    caption: "A built-in local engine sized to your graphics card, or any provider you add — Ollama, LM Studio, OpenAI, Claude, Gemini and more. Pick a default, then route each feature to its own model.",
+    alt: "JustWrite AI Settings — the computer's hardware and the local providers",
     span: "wide",
   },
   {
@@ -134,12 +149,6 @@ const shots = [
         <figure class={`shot shot--${s.span}`} style={`--i:${i}`}>
           <div class="shot-frame">
             <img src={shot(s.file)} alt={s.alt} loading="lazy" decoding="async" data-zoomable />
-            {s.audio && (
-              <div class="shot-audio">
-                <span class="audio-label">{s.audio.label}</span>
-                <audio controls preload="none" src={asset(s.audio.file)}></audio>
-              </div>
-            )}
           </div>
           <figcaption>
             <span class="cap-label">{s.label}</span>
@@ -196,29 +205,6 @@ const shots = [
     display: block;
     width: 100%;
     height: auto;
-  }
-
-  /* Audio sits inside the same frame as the screenshot — reads as one
-     artifact: this is the script, and this is what it sounds like rendered. */
-  .shot-audio {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    padding: 0.9rem 1.1rem 1rem;
-    border-top: 1px solid var(--border);
-    background: var(--surface-2, var(--surface));
-    line-height: 1.3;
-  }
-  .audio-label {
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-2);
-  }
-  .shot-audio audio {
-    width: 100%;
-    height: 36px;
   }
 
   figcaption {

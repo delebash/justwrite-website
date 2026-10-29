@@ -8,15 +8,15 @@ const faqs = [
   },
   {
     q: "Where does my manuscript live?",
-    a: "On your computer. Projects are stored as files in your filesystem; nothing is uploaded to a server. You back it up the way you back up your other files."
+    a: "On your computer, in JustWrite's data folder — a local database you can move to any drive. Nothing leaves your machine unless you sync your books between your own devices or pick a cloud AI model. Export a book or a full backup any time from Settings → Backups."
   },
   {
     q: "Which AI providers work with it?",
-    a: "Anything that speaks OpenAI's chat-completions API. Cloud: OpenAI proper, Anthropic Claude, Google Gemini, OpenRouter, Mistral, Together, any chat-completions endpoint. Local: Ollama, LM Studio, llama.cpp, vLLM, your own deployment. Add a provider in Settings → AI providers; pick a model per task — or per feature."
+    a: "Anything that speaks OpenAI's chat-completions API. Cloud: OpenAI proper, Anthropic Claude, Google Gemini, OpenRouter, Mistral, Together, any chat-completions endpoint. Local: Ollama, LM Studio, llama.cpp, vLLM, your own deployment. Or skip all that: the built-in engine downloads a model sized to your graphics card. Add providers on the AI Settings page; pick a model per feature."
   },
   {
     q: "Do I need to be online?",
-    a: "Only if your chosen AI model is a cloud one. Run Ollama or LM Studio locally and the whole loop — manuscript, editor, AI — works with the WiFi off."
+    a: "Only if your chosen AI model is a cloud one. With the built-in engine (or Ollama, LM Studio) the model runs on your own computer, and once it's downloaded the whole loop — manuscript, editor, AI — works with the WiFi off."
   },
   {
     q: "What does it cost?",
@@ -24,11 +24,11 @@ const faqs = [
   },
   {
     q: "What platforms does it run on?",
-    a: "macOS, Windows, and Linux. The same source builds for all three via Tauri — a Rust shell around a webview — so behaviour is consistent across platforms."
+    a: "macOS, Windows, and Linux. The same source builds for all three with Electron, so behaviour is consistent across platforms."
   },
   {
     q: "Can I import an existing manuscript?",
-    a: "Yes. DOCX, plain text, and Markdown. The importer splits into parts, chapters, and scenes where it can detect the structure; otherwise you arrange it yourself."
+    a: "Yes. DOCX, EPUB, ODT, Markdown, and plain text. The importer splits into parts, chapters, and scenes where it can detect the structure; otherwise you arrange it yourself."
   },
   {
     q: "Can it make an audiobook?",
