@@ -22,8 +22,9 @@ const features = [
   },
   {
     label: "04 · Audiobook",
-    title: "An audiobook, in .m4b, with chapters.",
-    body: "Cast voices for each character, render the manuscript through any TTS you can reach, and out the other side is a real audiobook — chapter markers, cover art, the lot. Drop it into Audible or Apple Books and it just plays.",
+    title: "Audiobooks, in JustVoice.",
+    body: "JustWrite is for writing. Turning the finished book into an audiobook is the job of its sibling app, JustVoice — still in development — which takes the prose from JustWrite and narrates it, with a voice for each character.",
+    link: { href: "https://github.com/delebash/JustVoice", label: "JustVoice on GitHub →" },
     span: "wide",
   },
   {
@@ -58,6 +59,7 @@ const features = [
           <div class="f-label">{f.label}</div>
           <h3 class="f-title">{f.title}</h3>
           <p class="f-body">{f.body}</p>
+          {f.link && <a class="f-link" href={f.link.href}>{f.link.label}</a>}
           <span class="f-corner" aria-hidden="true">¶</span>
         </article>
       ))}
@@ -143,6 +145,14 @@ const features = [
     color: var(--ink-2);
     margin: 0;
     max-width: 38ch;
+  }
+
+  .f-link {
+    display: inline-block;
+    margin-top: 0.9rem;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--accent);
   }
 
   .f-corner {
