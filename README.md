@@ -36,8 +36,9 @@ Output lands in `dist/`.
      and set it to `'/<repo>'`.
    - If using a custom domain, leave `base` commented out and add a
      `CNAME` file to `public/`.
-4. Push to `main` (or `master`) — the workflow in
-   `.github/workflows/deploy.yml` will build and publish.
+4. Run `npm run deploy` (or **Run workflow** on the Actions page) — the workflow in
+   `.github/workflows/deploy.yml` builds and publishes. It runs only when asked: never on a push or
+   from justwrite-app's release, which only attaches the `docs.tar.gz` the build takes.
 
 ## Structure
 
