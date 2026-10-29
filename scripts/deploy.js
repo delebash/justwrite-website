@@ -41,8 +41,12 @@ if (tryGh(["auth", "status"]) === null) fail("the gh CLI isn't signed in — run
 // which docs go live: the app's latest release, its docs.tar.gz or (a release made before it) the tag's source
 const release = tryGh(["release", "view", "-R", site.appRepo, "--json", "tagName,assets"]);
 let what;
-if (release === null) what = `no release of ${site.appRepo} yet — the site goes live with no docs pages`;
-else {
+if (release === null) {
+  what =
+    site.untilFirstRelease === "main"
+      ? `the docs on ${site.appRepo}'s main branch — it has no release yet (justSite.untilFirstRelease)`
+      : `no release of ${site.appRepo} yet — the site goes live with no docs pages`;
+} else {
   const { tagName, assets } = JSON.parse(release);
   const attached = assets.some((a) => a.name === "docs.tar.gz");
   what = `${site.appRepo} ${tagName}'s docs (${attached ? "its docs.tar.gz" : "from the tag's source — the release has no docs.tar.gz"})`;

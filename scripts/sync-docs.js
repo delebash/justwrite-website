@@ -11,7 +11,9 @@
 //   node scripts/sync-docs.js --from release [--tag v0.2.0]
 //     The docs of a release of the app (the latest by default; --tag pins one): its docs.tar.gz, which the app's
 //     release attaches while the release is still a draft — or, for a release made before that, the same files from
-//     the tag's source. The site serves the docs of the latest RELEASE, never the app's main branch.
+//     the tag's source. The site serves the docs of the latest RELEASE, never the app's main branch — but for an app
+//     with no release at all a site may opt in (`justSite.untilFirstRelease: "main"`, docgen's decision 2026-10-28) to
+//     the docs on the app's main branch until its first release exists.
 //
 // Each page gets Starlight's frontmatter (its title from its first heading, its description from the contents
 // file's hint), a leading <!-- comment --> (an SPDX line) and the first heading go, and its links to sibling pages
@@ -130,12 +132,44 @@ async function fromLocal() {
   return syncFromDir(LOCAL_APP);
 }
 
+// staged in the repo, not os.tmpdir(): on Windows that can carry a \\?\ prefix a spawned tar can't take as its cwd
+// (justwrite-website's finding); .docs-cache is gitignored
+const tmpDir = resolve(ROOT, ".docs-cache");
+async function unpack(res) {
+  await rm(tmpDir, { recursive: true, force: true });
+  await mkdir(tmpDir, { recursive: true });
+  await writeFile(join(tmpDir, "in.tar.gz"), Buffer.from(await res.arrayBuffer()));
+  execFileSync("tar", ["-xzf", "in.tar.gz"], { cwd: tmpDir, stdio: "inherit" });
+}
+
+/** The docs in a GitHub source archive (`ref`: refs/tags/<tag> or refs/heads/main) — one folder, <repo>-<ref>. */
+async function fromSource(ref) {
+  const src = `https://codeload.github.com/${APP_REPO}/tar.gz/${ref}`;
+  const res = await fetch(src);
+  if (!res.ok) {
+    if (SILENT_IF_MISSING && res.status === 404) {
+      console.log(`sync-docs: no source at ${ref} — skipped (--silent-if-missing).`);
+      return [];
+    }
+    throw new Error(`download failed: ${res.status} ${res.statusText} from ${src}`);
+  }
+  await unpack(res);
+  const top = (await readdir(tmpDir, { withFileTypes: true })).find((d) => d.isDirectory());
+  if (!top) throw new Error(`${src} held no folder`);
+  return syncFromDir(join(tmpDir, top.name, "docs"));
+}
+
 async function fromRelease() {
   let tag = TAG;
   if (!tag) {
     console.log(`sync-docs: the latest release of ${APP_REPO}…`);
     const res = await fetch(`https://api.github.com/repos/${APP_REPO}/releases/latest`, { headers: { Accept: "application/vnd.github+json" } });
     if (!res.ok) {
+      if (res.status === 404 && site.untilFirstRelease === "main") {
+        // the app has no release yet, and this site opted in: the docs on its main branch until the first one
+        console.log(`sync-docs: ${APP_REPO} has no release yet — the docs on its main branch (justSite.untilFirstRelease)`);
+        return fromSource("refs/heads/main");
+      }
       if (SILENT_IF_MISSING && res.status === 404) {
         console.log("sync-docs: no release yet — skipped (--silent-if-missing).");
         return [];
@@ -145,15 +179,6 @@ async function fromRelease() {
     tag = (await res.json()).tag_name;
     if (!tag) throw new Error("the latest release has no tag_name");
   }
-  // staged in the repo, not os.tmpdir(): on Windows that can carry a \\?\ prefix a spawned tar can't take as its
-  // cwd (justwrite-website's finding); .docs-cache is gitignored
-  const tmpDir = resolve(ROOT, ".docs-cache");
-  await rm(tmpDir, { recursive: true, force: true });
-  await mkdir(tmpDir, { recursive: true });
-  const unpack = async (res) => {
-    await writeFile(join(tmpDir, "in.tar.gz"), Buffer.from(await res.arrayBuffer()));
-    execFileSync("tar", ["-xzf", "in.tar.gz"], { cwd: tmpDir, stdio: "inherit" });
-  };
 
   const url = `https://github.com/${APP_REPO}/releases/download/${tag}/docs.tar.gz`;
   console.log(`sync-docs: docs.tar.gz from ${APP_REPO}@${tag}`);
@@ -165,21 +190,8 @@ async function fromRelease() {
   if (res.status !== 404) throw new Error(`download failed: ${res.status} ${res.statusText} from ${url}`);
   // a release made before the app attached docs.tar.gz: the same docs from the release's own tagged source — still
   // the released docs, never the main branch's
-  const src = `https://codeload.github.com/${APP_REPO}/tar.gz/refs/tags/${tag}`;
   console.log(`sync-docs: ${tag} has no docs.tar.gz — its docs from the tag's source`);
-  const tagged = await fetch(src);
-  if (!tagged.ok) {
-    if (SILENT_IF_MISSING && tagged.status === 404) {
-      console.log(`sync-docs: no source for ${tag} either — skipped (--silent-if-missing).`);
-      return [];
-    }
-    throw new Error(`download failed: ${tagged.status} ${tagged.statusText} from ${src}`);
-  }
-  await unpack(tagged);
-  // GitHub's source archive holds one folder, <repo>-<version>
-  const top = (await readdir(tmpDir, { withFileTypes: true })).find((d) => d.isDirectory());
-  if (!top) throw new Error(`${src} held no folder`);
-  return syncFromDir(join(tmpDir, top.name, "docs"));
+  return fromSource(`refs/tags/${tag}`);
 }
 
 try {
