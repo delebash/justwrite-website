@@ -15,8 +15,10 @@
 //     with no release at all a site may opt in (`justSite.untilFirstRelease: "main"`, docgen's decision 2026-10-28) to
 //     the docs on the app's main branch until its first release exists.
 //
-// Each page gets Starlight's frontmatter (its title from its first heading, its description from the contents
-// file's hint), a leading <!-- comment --> (an SPDX line) and the first heading go, and its links to sibling pages
+// Each page gets Starlight's frontmatter (its title from its first heading, its description from the doc's own
+// front-matter `lede:` — its one-line summary, docgen's single source — or else the contents file's hint); the doc's
+// front-matter block (the `front-matter` package, the kit's way — a site's dependency), a leading <!-- comment --> (an
+// SPDX line) and the first heading go, and its links to sibling pages
 // (`(foo.md)`) become the site's routes. The app's contents file (toc.json — its Help order) is copied to
 // src/data/docs-toc.json for the site's sidebar; a group is `{ group | section, items: [{ slug, hint? }] }`.
 
@@ -24,6 +26,7 @@ import { execFileSync } from "node:child_process";
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import frontMatter from "front-matter";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const TARGET = resolve(ROOT, "src/content/docs/docs");
@@ -86,12 +89,14 @@ function rewriteLinks(markdown, docsBase) {
 async function processFile(srcPath, docsBase, hints) {
   const fileName = basename(srcPath);
   const slug = fileName === "README.md" ? "index" : fileName.replace(/\.md$/, "");
-  const raw = await readFile(srcPath, "utf8");
+  // a leading front-matter block (`lede:`, `hints:`) is the doc's data, never its page
+  const { attributes, body: raw } = frontMatter(await readFile(srcPath, "utf8"));
   const title = titleOf(raw, slug);
   // the leading comment (an SPDX line) and the H1 go: Starlight renders the frontmatter's title. `[^\r\n]*`, not
   // `.+`: in a CRLF checkout `.` stops at the \r and the H1 stayed (justwrite-website's finding — every title twice)
   const stripped = raw.replace(/^<!--[^]*?-->\s*/, "").replace(/^#\s+[^\r\n]*\r?\n+/, "");
-  const hint = hints.get(slug);
+  const lede = typeof attributes.lede === "string" && attributes.lede.trim() ? attributes.lede.trim() : null;
+  const hint = lede ?? hints.get(slug);
   const frontmatter = `---\ntitle: "${escapeYaml(title)}"\n${hint ? `description: "${escapeYaml(hint)}"\n` : ""}---\n\n`;
   await writeFile(join(TARGET, `${slug}.md`), frontmatter + rewriteLinks(stripped, docsBase));
   return slug;

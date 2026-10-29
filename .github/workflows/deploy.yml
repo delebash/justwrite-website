@@ -9,6 +9,12 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      publish:
+        description: "Deploy the built site to GitHub Pages (off: a dry run — the site is built and uploaded, never deployed)."
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -24,12 +30,12 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 24 # the family's Node (Electron 44 carries 24.22.1) — it moves with the Electron major
           cache: npm
 
       - name: Install dependencies
@@ -40,15 +46,16 @@ jobs:
         run: npm run build
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
 
   deploy:
     needs: build
+    if: inputs.publish
     runs-on: ubuntu-24.04
     environment:
       name: github-pages
@@ -56,4 +63,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

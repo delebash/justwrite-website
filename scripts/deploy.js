@@ -8,6 +8,7 @@
 //
 //   npm run deploy            # says which release's docs go live, asks, then starts the site's workflow
 //   npm run deploy -- --yes   # no question (a scripted run)
+//   npm run deploy -- --dry-run   # build and upload only: nothing goes live (the workflow's `publish: false`)
 //
 // The workflow builds the site with the docs of the app's latest release (scripts/sync-docs.js --from release) and
 // publishes it on GitHub Pages. It needs the gh CLI signed in — the user's own login, no token in any repository.
@@ -51,17 +52,19 @@ if (release === null) {
   const attached = assets.some((a) => a.name === "docs.tar.gz");
   what = `${site.appRepo} ${tagName}'s docs (${attached ? "its docs.tar.gz" : "from the tag's source — the release has no docs.tar.gz"})`;
 }
-console.log(`Deploy ${site.siteRepo} with ${what}.`);
+const dryRun = process.argv.includes("--dry-run");
+console.log(`${dryRun ? "Dry run — build, never publish —" : "Deploy"} ${site.siteRepo} with ${what}.`);
 
 if (!process.argv.includes("--yes") && !process.argv.includes("-y")) {
   const rl = createInterface({ input: stdin, output: stdout });
-  const answer = (await rl.question("Build and publish it now? [y/N] ")).trim().toLowerCase();
+  const answer = (await rl.question(dryRun ? "Build it now (nothing is published)? [y/N] " : "Build and publish it now? [y/N] ")).trim().toLowerCase();
   rl.close();
   if (answer !== "y" && answer !== "yes") fail("not confirmed — nothing started.");
 }
 
 try {
-  execFileSync("gh", ["workflow", "run", "deploy.yml", "-R", site.siteRepo, "--ref", "main"], { cwd: ROOT, stdio: ["ignore", "inherit", "inherit"] });
+  const args = ["workflow", "run", "deploy.yml", "-R", site.siteRepo, "--ref", "main", ...(dryRun ? ["-f", "publish=false"] : [])];
+  execFileSync("gh", args, { cwd: ROOT, stdio: ["ignore", "inherit", "inherit"] });
 } catch {
   fail(`\`gh workflow run deploy.yml -R ${site.siteRepo}\` failed — is .github/workflows/deploy.yml on its main branch?`);
 }
