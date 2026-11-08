@@ -7,7 +7,7 @@ const shot = (name) => `${base}/screenshots/${name}?v=${v}`;
 // Build-time lookup of the latest GitHub release. The bundled assets'
 // version-stamped filenames make a static URL impossible, so we fetch
 // the latest-release JSON at build time and embed the actual download
-// URLs. Rebuilds happen on every new release via repository_dispatch,
+// URLs. The site is rebuilt after each release by its own `npm run deploy`,
 // so these stay current.
 const RELEASES_PAGE = "https://github.com/delebash/justwrite-app/releases/latest";
 async function findDownloads() {
@@ -19,7 +19,7 @@ async function findDownloads() {
     const json = await res.json();
     const find = (re) => json.assets?.find((a) => re.test(a.name))?.browser_download_url;
     return {
-      windows: find(/-setup\.exe$/i),
+      windows: find(/-setup-[^/]*\.exe$/i), // justwrite-Setup-<version>.exe (the app's quasar.config.js)
       mac:     find(/universal\.dmg$/i),
       linux:   find(/\.AppImage$/i),
       tag:     json.tag_name,
@@ -112,9 +112,9 @@ const linuxHref   = dl.linux   || RELEASES_PAGE;
         <li><span class="mono-tag">Windows</span></li>
         <li><span class="mono-tag">Linux</span></li>
         <li class="sep">·</li>
-        <li><span class="hero-meta-em">Tauri</span></li>
+        <li><span class="hero-meta-em">Electron</span></li>
         <li><span class="hero-meta-em">Vue 3</span></li>
-        <li><span class="hero-meta-em">Rust</span></li>
+        <li><span class="hero-meta-em">Node</span></li>
       </ul>
     </div>
 

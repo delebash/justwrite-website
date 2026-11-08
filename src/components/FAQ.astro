@@ -4,7 +4,7 @@ const { roman = "VII" } = Astro.props;
 const faqs = [
   {
     q: "Is it really written entirely by Claude?",
-    a: "Yes. The human who runs the project hasn't written any of the code — they shape it by reading it, using it, and telling Claude what to change. The colophon above is the longer version of that story."
+    a: "Yes. The human who runs the project hasn't written any of the code — they shape it by reading it, using it, and telling Claude what to change. The colophon below is the longer version of that story."
   },
   {
     q: "Where does my manuscript live?",
@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     q: "Can I import an existing manuscript?",
-    a: "Yes. DOCX, EPUB, ODT, Markdown, and plain text. The importer splits into parts, chapters, and scenes where it can detect the structure; otherwise you arrange it yourself."
+    a: "Yes. DOCX, EPUB, ODT, Markdown, and plain text. The importer splits the file into chapters at its headings, and a chapter into scenes at its scene breaks (* * * and the like); you pick the part the chapters land in, and arrange the rest yourself."
   },
   {
     q: "Can it make an audiobook?",
