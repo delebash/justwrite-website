@@ -63,9 +63,11 @@ if (!process.argv.includes("--yes") && !process.argv.includes("-y")) {
 }
 
 try {
-  const args = ["workflow", "run", "deploy.yml", "-R", site.siteRepo, "--ref", "main", ...(dryRun ? ["-f", "publish=false"] : [])];
+  // no --ref: gh runs the workflow on the site repo's default branch (JustWrite's site is on master — a fixed "main"
+  // was refused, "No ref found for: main", at v2.1.0's deploy, 2026-11-08)
+  const args = ["workflow", "run", "deploy.yml", "-R", site.siteRepo, ...(dryRun ? ["-f", "publish=false"] : [])];
   execFileSync("gh", args, { cwd: ROOT, stdio: ["ignore", "inherit", "inherit"] });
 } catch {
-  fail(`\`gh workflow run deploy.yml -R ${site.siteRepo}\` failed — is .github/workflows/deploy.yml on its main branch?`);
+  fail(`\`gh workflow run deploy.yml -R ${site.siteRepo}\` failed — is .github/workflows/deploy.yml on its default branch?`);
 }
 console.log(`Started: https://github.com/${site.siteRepo}/actions/workflows/deploy.yml`);
